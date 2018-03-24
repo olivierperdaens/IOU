@@ -8,5 +8,3 @@ Projet Cours LSINF1212 - Application web
 
 ### lancer le serveur web:
 ```npm start```
-
-
