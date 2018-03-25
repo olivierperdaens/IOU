@@ -10,7 +10,7 @@ let flash = require("express-flash-messages");
 let sessionStore = new session.MemoryStore;
 
 let index = require('./routes/index');
-let connect = require('./routes/connect');
+let connection = require('./routes/connection');
 
 let app = express();
 
@@ -39,8 +39,7 @@ app.use(require("./middlewares/auth"));
   ROUTES
  */
 app.use('/', index);
-app.use('/connect', connect);
-
+app.use('/connection', connection);
 
 
 /*
