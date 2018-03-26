@@ -40,6 +40,20 @@ class Auth{
             });
         });
     }
+
+    static nbrFriendsAsks(email, password, cb){
+        this.userInfo(email, password, function(info){
+            let friends = info.friends;
+            let i = 0;
+            for(let friend in friends){
+                if(!friend.confirmed){
+                    i++;
+                }
+            }
+            cb(i);
+        });
+    }
+
 }
 
 module.exports = Auth;

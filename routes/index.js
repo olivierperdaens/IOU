@@ -2,20 +2,19 @@ let express = require('express');
 let router = express.Router();
 let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
+let auth = require("../model/Auth");
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    let page = {
-      title : "IOU"
-    };
-    MongoClient.connect('mongodb://localhost:27017', (err, db) => {
-        if (err) throw err;
-        let dbo = db.db("iou");
-        dbo.collection('grades').findOne({student: "Amanda"}, (err, doc) => {
-            if (err) throw err;
-            res.render('index', {page, doc});
+    auth.nbrFriendsAsks(req.session.email, req.session.password, function(nbrFriendsAsks) {
+        let session = req.session;
+        let page = {
+            title: "IOU",
+            id_active: "dettes"
+        };
+        auth.userInfo(session.email, session.password, function (info) {
+            res.render('index', {nbrFriendsAsks, page, user: info});
         });
-        db.close();
     });
 });
 

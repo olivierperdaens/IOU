@@ -8,6 +8,7 @@ let flash = require("express-flash-messages");
 
 let index = require('./routes/index');
 let connection = require('./routes/connection');
+let friends = require("./routes/friends");
 
 let app = express();
 
@@ -40,6 +41,7 @@ app.use(require("./middlewares/auth"));
  */
 app.use('/', index);
 app.use('/connection', connection);
+app.use('/friends', friends);
 
 
 /*

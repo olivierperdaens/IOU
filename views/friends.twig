@@ -1,0 +1,43 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    {% include "flash.twig" %}
+    MES AMIS
+    <table class="table">
+        <thead>
+            <th>Prenom</th>
+            <th>Nom</th>
+        </thead>
+        <tbody>
+        {% for friend in user.friends %}
+            {% if friend.confirmed %}
+            <tr>
+                <td>{{ friend.prenom }}</td>
+                <td>{{ friend.nom }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <br>
+
+    Mes demande d'amis
+    <table class="table">
+        <thead>
+            <th>Prenom</th>
+            <th>Nom</th>
+        </thead>
+        <tbody>
+        {% for friend in user.friends %}
+            {% if friend.confirmed == false %}
+                <tr>
+                    <td>{{ friend.prenom }}</td>
+                    <td>{{ friend.nom }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

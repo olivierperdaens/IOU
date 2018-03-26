@@ -3,7 +3,6 @@
 {% block body %}
     {% include "flash.twig" %}
       <h1>{{page.title}}</h1>
-      <p>Welcome to {{page.title}}</p>
-        <a class="btn btn-info" href="/connection/connect">Se connecter</a>
+      <p>Bonjour {{ user.prenom }} {{ user.nom }}</p>
 
 {% endblock %}
