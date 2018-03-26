@@ -8,11 +8,11 @@ module.exports = function(request, response, next){
                 sess.email,
                 sess.password,
                 () => {
-                    request.flash("danger", "Vous devez être connecté puor accéder à ce contenu !");
+                    request.flash("danger", "Vous devez être connecté pour accéder à ce contenu !");
                     response.redirect("/connection/connect");
                 },
                 () => {
-                    request.flash("danger", "Vous devez être connecté puor accéder à ce contenu !");
+                    request.flash("danger", "Vous devez être connecté pour accéder à ce contenu !");
                     response.redirect("/connection/connect");
                 },
                 () => {

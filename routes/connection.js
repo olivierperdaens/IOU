@@ -1,7 +1,5 @@
 let express = require('express');
 let router = express.Router();
-let MongoClient = require('mongodb').MongoClient;
-let Server = require('mongodb').Server;
 let auth = require("../model/auth");
 
 
@@ -17,7 +15,7 @@ router.get('/connect', function(req, res) {
 
 
 /* POST | WHEN USER TRY TO CONNECT */
-//TODO persistance des données en cas d'échec
+// TODO persistance des données en cas d'échec
 router.post('/connect', function(req, res){
     let email = req.body.email;
     let password = req.body.password;
@@ -27,22 +25,23 @@ router.post('/connect', function(req, res){
         password,
         ()=>{
             req.flash("danger", 'Utilisateur inconnu !');
-            res.redirect("/connect");
+            res.redirect("/connection/connect");
         },
         ()=>{
             req.flash("danger", "Mot de passe erroné !");
-            res.redirect("/connect");
+            res.redirect("/connection/connect");
         },
         ()=>{
             req.session.email = email;
             req.session.password = password;
-            req.flash('success', "Bienvenu sur IOU !");
+            req.flash('success', "Bienvenue sur IOU !");
             res.redirect("/");
         }
     );
+    //TODO accès aux variable de session trop long !
 });
 
-/* GET | DISPLAY CONNECT PAGE */
+/* GET | DISPLAY NEW ACCOUNT PAGE */
 router.get('/new_account', function(req, res) {
     //TODO new account page
     res.send("new_account");

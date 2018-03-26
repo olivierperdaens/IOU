@@ -1,13 +1,10 @@
 let express = require('express');
 let path = require('path');
-let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let session = require("express-session");
 let flash = require("express-flash-messages");
-
-let sessionStore = new session.MemoryStore;
 
 let index = require('./routes/index');
 let connection = require('./routes/connection');
@@ -19,21 +16,24 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'twig');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser('keyboard cat'));
+//app.use(cookieParser('keyboard cat'));
+
 app.use(session({
-    secret : 'secret',
-    store: sessionStore,
+    secret : 'keyboard cat',
     resave: true,
     saveUninitialized: true,
-    cookie: {maxAge: 60000, secure: false}
+    cookie: {
+        maxAge: null,
+        secure: false
+    }
 }));
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(require("./middlewares/auth"));
+//app.use(require("./middlewares/auth"));
 
 /*
   ROUTES

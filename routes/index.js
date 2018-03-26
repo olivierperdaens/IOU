@@ -8,6 +8,8 @@ router.get('/', function(req, res) {
     let page = {
       title : "IOU"
     };
+    res.render('index');
+    /*
     MongoClient.connect('mongodb://localhost:27017', (err, db) => {
         let dbo = db.db("course");
         if (err) throw err;
@@ -16,6 +18,7 @@ router.get('/', function(req, res) {
             res.render('index', { page, doc });
         });
     });
+    */
 
 });
 
