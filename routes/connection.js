@@ -2,7 +2,6 @@ let express = require('express');
 let router = express.Router();
 let auth = require("../model/auth");
 
-
 /* GET | DISPLAY CONNECT PAGE */
 router.get('/connect', function(req, res) {
     let page = {

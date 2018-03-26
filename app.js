@@ -17,10 +17,10 @@ app.set('view engine', 'twig');
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-// app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser('keyboard cat'));
+app.use(cookieParser('keyboard cat'));
 
 app.use(session({
     secret : 'keyboard cat',
@@ -33,7 +33,7 @@ app.use(session({
 }));
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(require("./middlewares/auth"));
+app.use(require("./middlewares/auth"));
 
 /*
   ROUTES
