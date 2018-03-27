@@ -20,4 +20,20 @@ router.get('/', function(req, res) {
 
 });
 
+/* POST ACCEPT FRIEND */
+router.get('/accept', function(req, res){
+    res.send('accept friend');
+});
+
+/* POST REFUSE FRIEND */
+router.get('/refuse', function(req, res){
+    res.send('refuse friend');
+});
+
+/* POST ADD FRIEND */
+router.get('/add', function(req, res){
+    res.send('add friend');
+});
+
+
 module.exports = router;
