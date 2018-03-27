@@ -44,15 +44,16 @@ class Auth{
     static nbrFriendsAsks(email, password, cb){
         this.userInfo(email, password, function(info){
             let friends = info.friends;
-            let i = 0;
-            for(let friend in friends){
-                if(!friend.confirmed){
-                    i++;
+            let nbr = 0;
+            for(let i = 0; i<friends.length; i++){
+                if(!friends[i].confirmed){
+                    nbr ++;
                 }
             }
-            cb(i);
+            cb(nbr);
         });
     }
+
 
 }
 
