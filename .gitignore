@@ -2,7 +2,7 @@
 node_modules/*
 
 # ignore .idea directory
-.idea/*
+.idea
 
 # ignore db-data
 db-data/*
