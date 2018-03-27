@@ -1,8 +1,8 @@
 # ignore all modules details (everyone install modules localy)
-node_modules/
+node_modules/*
 
 # ignore .idea directory
-.idea/
+.idea/*
 
 # ignore db-data
-db-data/
+db-data/*
