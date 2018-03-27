@@ -3,11 +3,16 @@ Projet Cours LSINF1212 - Application web
 
 ## Procédure pour lancer l'application
 
-### MongoDB
-> Version 3.0.0 minimum
+### Configuration
+> MongoDB v3.0.0 ou + 
 
-### Lancer la base de donnée:
+In case mongoDB doesn't work, run with
+`` --storageEngine wiredTiger``
+
+### Run database:
 ```mongod --dbpath db-data```
+>In case mongoDB doesn't work, run with
+ `` --storageEngine wiredTiger``
 
-### Lancer le serveur web:
+### Run web server:
 ```npm start```
