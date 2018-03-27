@@ -9,7 +9,6 @@ let flash = require("express-flash-messages");
 let index = require('./routes/index');
 let connection = require('./routes/connection');
 let friends = require("./routes/friends");
-
 let app = express();
 
 // view engine setup
