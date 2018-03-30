@@ -14,3 +14,6 @@ Projet Cours LSINF1212 - Application web
 
 ### Run web server:
 ```npm start```
+
+## Lancement des Tests unitaires
+``npm test``
