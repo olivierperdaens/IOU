@@ -12,9 +12,7 @@ router.get('/', function(req, res) {
             title: "IOU",
             id_active: "dettes"
         };
-        auth.userInfo(session.email, session.password, function (info) {
-            res.render('index', {nbrFriendsAsks, page, user: info});
-        });
+        res.render('index', {nbrFriendsAsks, page});
     });
 });
 

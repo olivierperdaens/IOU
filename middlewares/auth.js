@@ -15,7 +15,8 @@ module.exports = function(request, response, next){
                     request.flash("danger", "Vous devez être connecté pour accéder à ce contenu !");
                     response.redirect("/connection/connect");
                 },
-                () => {
+                (userInfo) => {
+                    response.locals.connectedUser = userInfo;
                     next();
                 });
         }

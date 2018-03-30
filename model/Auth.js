@@ -14,7 +14,7 @@ class Auth{
                     dbo.collection("users").findOne({email: email, password: password}, function(err, result){
                         // Check password correct and correspond to this user
                         if(result !== null){
-                            cbSuccess();
+                            cbSuccess(doc);
                         }
                         else{
                             cbWrongPassword();
