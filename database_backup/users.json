@@ -1,2 +1,2 @@
-{"_id":{"$oid":"5ab3dfc2c41c47348357dfba"},"email":"olivier.perdaens@hotmail.fr","nom":"Perdaens","prenom":"Olivier","password":"test","friends":[{"id": {"$oid":"5abe2f9c50239fd8f7b52c88"},"confirmed":true}]}
-{"_id":{"$oid":"5abe2f9c50239fd8f7b52c88"},"email":"jean.dubois@gmail.com","nom":"Dubois","prenom":"Jean", "password":"test", "friends": [{"id": {"$oid":"5ab3dfc2c41c47348357dfba"}, "confirmed": true}]}
+{"_id":{"$oid":"5ab3dfc2c41c47348357dfba"},"email":"olivier.perdaens@hotmail.fr","nom":"Perdaens","prenom":"Olivier","password":"test","friends":[{"email":"jean.dubois@gmail.com","nom":"Dubois","prenom":"Jean","confirmed":true},{"email":"jean.dubois@gmail.com","nom":"Dupuis","prenom":"José","confirmed":false}]}
+{"_id":{"$oid":"5abe2f9c50239fd8f7b52c88"},"email":"jean.dubois@gmail.com","nom":"Dubois","prenom":"Jean", "password":"test", "friends": []}

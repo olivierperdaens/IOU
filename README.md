@@ -20,3 +20,9 @@ Projet Cours LSINF1212 - Application web
 
 ## Lancement des Tests unitaires
 ``npm test``
+
+
+### Info login test
+Login: "olivier.perdaens@hotmail.fr"
+
+Password: "test"

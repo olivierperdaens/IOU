@@ -1,4 +1,5 @@
-let MongoClient = require('mongodb').MongoClient;
+let Mongo = require("mongodb");
+let MongoClient = Mongo.MongoClient;
 let Server = require('mongodb').Server;
 
 class Auth{
@@ -29,11 +30,23 @@ class Auth{
         });
     }
 
-    static userInfo(email, password, cb){
+    static userId(email, password, cb){
         MongoClient.connect('mongodb://localhost:27017', (err, db) => {
             if (err) throw err;
             let dbo = db.db("iou");
             dbo.collection("users").findOne({email: email, password: password}, function (err, result) {
+                if (err) throw err;
+                cb(result._id);
+                db.close();
+            });
+        });
+    }
+
+    static userInfo(id, cb){
+        MongoClient.connect('mongodb://localhost:27017', (err, db) => {
+            if (err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("users").findOne({_id: Mongo.ObjectId(id)}, function (err, result) {
                 if (err) throw err;
                 cb(result);
                 db.close();
@@ -42,16 +55,19 @@ class Auth{
     }
 
     static nbrFriendsAsks(email, password, cb){
-        this.userInfo(email, password, function(info){
-            let friends = info.friends;
-            let nbr = 0;
-            for(let i = 0; i<friends.length; i++){
-                if(!friends[i].confirmed){
-                    nbr ++;
+        this.userId(email, password, function(id_user){
+            Auth.userInfo(id_user, function(info){
+                let friends = info.friends;
+                let nbr = 0;
+                for(let i = 0; i<friends.length; i++){
+                    if(!friends[i].confirmed){
+                        nbr ++;
+                    }
                 }
-            }
-            cb(nbr);
+                cb(nbr);
+            });
         });
+
     }
 
 
