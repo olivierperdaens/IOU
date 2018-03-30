@@ -8,9 +8,12 @@ Projet Cours LSINF1212 - Application web
 
 
 ### Run database:
-```mongod --dbpath db-data```
->In case mongoDB doesn't work, run with
- `` --storageEngine wiredTiger``
+1) Install MongoDB server
+2) Import each '.json' file from database_backup folder with ``mongoimport``
+3) Database name: iou
+4) Run your database with
+```mongod --dbpath <path_to_your_database_directory>```
+
 
 ### Run web server:
 ```npm start```
