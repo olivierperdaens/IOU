@@ -1,7 +1,7 @@
 module.exports = function(request, response, next){
     let sess = request.session;
     let auth = require('../model/auth');
-    let user = require("../model/User");
+    let user = require("../model/user");
 
     if(request.url.substring(0,11) !== "/connection") {
         if (sess.email !== undefined && sess.password !== undefined) {

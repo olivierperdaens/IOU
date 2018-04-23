@@ -2,9 +2,9 @@ let express = require('express');
 let router = express.Router();
 let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
-let auth = require("../model/Auth");
-let friend = require("../model/Friend");
-let user = require("../model/User");
+let auth = require("../model/auth");
+let friend = require("../model/friend");
+let user = require("../model/user");
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -32,7 +32,7 @@ router.get('/accept/:email', function(req, res){
                    friendsTab[i].confirmed = true;
                }
             }
-            console.log(friendsTab);
+            //console.log(friendsTab);
             dbo.collection("users").updateOne({email: userInfo.email, password: userInfo.password}, {$set: {friends: friendsTab}}, function (err) {
                 if (err) throw err;
                 db.close();

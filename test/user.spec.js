@@ -1,6 +1,6 @@
-let User = require('../model/User');
-let expect = require('expect');
-let assert = require('assert');
+let User = require('../model/user');
+let expect = require('chai').expect;
+let assert = require('chai').assert;
 
 
 describe("User", ()=>{
@@ -15,7 +15,6 @@ describe("User", ()=>{
 
   it("when adding a friend both should become friends", ()=>{
     user1.addFriend(user2);
-    let check = user2.isFriendWith(user1);
-    assert.equal(check, true);
+      expect(user2.isFriendWith(user1)).be.true;
   })
 });

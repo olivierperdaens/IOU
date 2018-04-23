@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
-let auth = require("../model/Auth");
+let auth = require("../model/auth");
 
 /* GET home page. */
 router.get('/', function(req, res) {

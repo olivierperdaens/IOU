@@ -1,7 +1,7 @@
-let assert = require('assert');
+let assert = require('chai').assert;
 
-let Debt = require('../model/Debt');
-let User = require('../model/User');
+let Debt = require('../model/debt');
+let User = require('../model/user');
 
 
 describe('Debt', () => {

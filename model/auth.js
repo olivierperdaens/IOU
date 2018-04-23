@@ -67,7 +67,6 @@ class Auth{
                 cb(nbr);
             });
         });
-
     }
 
 

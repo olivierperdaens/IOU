@@ -19,6 +19,10 @@ class User {
     return this.friends.includes(user)
   }
 
+  getFriendList(){
+
+  }
+
   static getFriendList(){
       //TODO implement friendlist User non static
       MongoClient.connect('mongodb://localhost:27017', (err, db) => {
