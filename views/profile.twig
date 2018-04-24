@@ -1,0 +1,30 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    {% include "flash.twig" %}
+    <div class="row">
+
+
+
+        <div class="col-sm-6" style="margin-top: 15px">
+            <table class="table table-striped">
+                <h3>Profile: </h3>
+                <tr>
+                  <td>
+                    {{ connectedUser.prenom }}
+                  </td>
+                  <td>
+                    TODO edit
+                  </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript"  src="../javascripts/friends/index.js"></script>
+{% endblock %}
