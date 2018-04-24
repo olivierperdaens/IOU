@@ -7,3 +7,6 @@ node_modules/*
 # ignore db-data
 db-data/
 */db-data/
+./db-data
+./db-data/
+./db-data/*
