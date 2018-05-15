@@ -34,17 +34,52 @@ class User {
       return this._id;
   }
 
+
+  getAsksFriendsList(cb){
+      let list = [];
+        friend.getAllFriendAsks(function(res){
+            let i = 0;
+            if(res.length===0){
+                cb(list);
+            }
+            else{
+                res.forEach(function(item){
+                    i++;
+                    item.getOtherUser(function(user){
+                        list.push(user);
+                        if(i===res.length){
+                            cb(list);
+                        }
+                    });
+                });
+            }
+
+        });
+  }
+
   getFriends(cb){
       friend.getAllFriend(this._id, function(res){
           cb(res);
       });
   }
 
-  getFriendslist(cb){
+   getFriendslist(cb){
       let list = [];
       this.getFriends(function(res){
-          for(let item in res){
-              list.push(item.getOtherUser())
+          let i = 0;
+          if(res.length === 0){
+              cb(list);
+          }
+          else{
+              res.forEach(function(item){
+                  i++;
+                  item.getOtherUser(function(user){
+                      list.push(user);
+                      if(i===res.length){
+                          cb(list);
+                      }
+                  });
+              });
           }
       });
   }

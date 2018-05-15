@@ -24,12 +24,10 @@
                 </thead>
                 <tbody>
                 {% for friend in friends %}
-                    {% if friend.confirmed %}
                         <tr>
-                            <td>{{ friend.otherUser.prenom }} </td>
-                            <td>{{ friend.otherUser.nom }}</td>
+                            <td>{{ friend.prenom }} </td>
+                            <td>{{ friend.nom }}</td>
                         </tr>
-                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
@@ -42,25 +40,21 @@
                     <tr>
                         <th>Prenom</th>
                         <th>Nom</th>
-                        <th>Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                {% for friend_info in connectedUser.friends %}
-                    {% if friend_info.confirmed == false %}
+                {% for friendAsk in asksFriends %}
                         <tr>
-                            <td>{{ friend_info.otherUser.prenom }}</td>
-                            <td>{{ friend_info.otherUser.nom }}</td>
-                            <td>{{ friend_info.askDate }}</td>
+                            <td>{{ friendAsk.prenom }}</td>
+                            <td>{{ friendAsk.nom }}</td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="/friends/accept/{{ friend_info.otherUser.email }}" class="btn btn-success"><i class="fa fa-check"></i></a>
-                                    <a href="/friends/refuse/{{ friend_info.otherUser.email }}" class="btn btn-danger"><i class="fa fa-times"></i> </a>
+                                    <a href="/friends/accept/{{ friendAsk._id }}" class="btn btn-success"><i class="fa fa-check"></i></a>
+                                    <a href="/friends/refuse/{{ friendAsk._id }}" class="btn btn-danger"><i class="fa fa-times"></i> </a>
                                 </div>
                             </td>
                         </tr>
-                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

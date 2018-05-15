@@ -21,7 +21,6 @@ module.exports = function(request, response, next){
                 },
                 (userInfo) => {
                     new User(userInfo._id, (usr) => {
-                        console.log(usr);
                         response.locals.connectedUser = usr;
                         conf.connectedUser = usr;
                         next();

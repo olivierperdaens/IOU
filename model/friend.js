@@ -21,8 +21,7 @@ class Friend{
             if(err) throw err;
             let dbo = db.db("iou");
             dbo.collection("friends").findOne({_id:Mongo.ObjectId(this._id)}, (err, data) => {
-                console.log(data);
-               if(err) throw err;
+                if(err) throw err;
                if(data != null && data !== undefined){
                    self._confirmed = data.confirmed;
                    self._askDate = data.askDate;
@@ -70,7 +69,7 @@ class Friend{
      * cb renvoie pas une instance du user ! juste les donées
      * @param cb
      */
-    getOtherUser(cb){
+    async getOtherUser(cb){
         if(conf.connectedUser.id === this._id_asker){
             this.getRecever(function(user){
                 cb(user);
@@ -92,12 +91,27 @@ class Friend{
     }
 
     static getAllFriendAsks(cb){
+        let list = [];
         MongoClient.connect(conf.db.url, (err, db) => {
             if(err) throw err;
             let dbo = db.db('iou');
             dbo.collection("friends").find({id_recever: conf.connectedUser.id.toString(), confirmed: false}).toArray((err, res)=>{
                 if(err) throw err;
-               cb(res);
+                let i=0;
+                res.forEach(function(fri){
+                   i++;
+                   new Friend(fri._id, function(friend){
+                       list.push(friend);
+                       if(i===res.length){
+                           cb(list);
+                           db.close();
+                       }
+                   })
+                });
+                if(res.length ===0){
+                    cb(list);
+                    db.close();
+                }
             });
         });
     }
@@ -111,14 +125,12 @@ class Friend{
 
     static getAllFriend(userId, cb){
         MongoClient.connect(conf.db.url, (err, db) => {
-            console.log("getAllFriend");
             if(err) throw err;
             let dbo = db.db("iou");
-            dbo.collection("friends").find({$or : [{id_asker : userId.toString()}, {id_recever: userId.toString()}]}).toArray((err, data) => {
+            dbo.collection("friends").find({$or : [{id_asker : userId.toString(), confirmed: true}, {id_recever: userId.toString(), confirmed:true}]}).toArray((err, data) => {
                if(err) throw err;
                let toReturn = [];
                let i = 0;
-               console.log(data);
                data.forEach(function(fri){
                    i++;
                    new Friend(fri._id, function(friend){
@@ -129,6 +141,34 @@ class Friend{
                        }
                    });
                });
+               if(data.length ===0){
+                   cb(toReturn);
+                   db.close();
+               }
+
+
+            });
+        })
+    }
+
+    static getAllAsksFriends(userId, cb){
+        MongoClient.connect(conf.db.url, (err, db) => {
+            if(err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("friends").find({id_recever: userId.toString(), confirmed:false}).toArray((err, data) => {
+                if(err) throw err;
+                let toReturn = [];
+                let i = 0;
+                data.forEach(function(fri){
+                    i++;
+                    new Friend(fri._id, function(friend){
+                        toReturn.push(friend);
+                        if(i===data.length){
+                            cb(toReturn);
+                            db.close();
+                        }
+                    });
+                });
 
 
             });

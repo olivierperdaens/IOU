@@ -33,10 +33,8 @@ class Auth{
     }
 
     static login(email, password, cbWrongUser, cbWrongPassword, cbSuccess){
-        console.log("call to isUser");
         this.isUser(email, password, cbWrongUser, cbWrongPassword, function(result){
             new user(result._id, (user) => {
-                console.log("user done");
                 conf.connectedUser = user;
                 cbSuccess(result);
             });
