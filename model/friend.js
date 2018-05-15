@@ -116,6 +116,62 @@ class Friend{
         });
     }
 
+    static refuse(idFriend, cbSuccess, cbError){
+        MongoClient.connect('mongodb://localhost:27017', (err, db) => {
+            if (err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("friends").findOne({id_asker : idFriend.toString()}, function(err, data){
+                if(err) throw err;
+                if(data.length !== 0){
+                    dbo.collection("friends").deleteOne({_id : Mongo.ObjectId(data._id)}, function(err, data2){
+                        if(err) throw err;
+                        if(data2.deletedCount === 1){
+                            db.close();
+                            cbSuccess();
+                        }
+                        else{
+                            db.close();
+                            cbError();
+                        }
+
+                    });
+                }
+                else{
+                    db.close();
+                    cbError();
+                }
+            });
+        });
+    }
+
+    static accept(idFriend, cbSuccess, cbError){
+        MongoClient.connect('mongodb://localhost:27017', (err, db) => {
+            if (err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("friends").findOne({id_asker : idFriend.toString()}, function(err, data){
+                if(err) throw err;
+                if(data.length !== 0){
+                    dbo.collection('friends').updateOne({_id : Mongo.ObjectId(data._id)}, {$set : {confirmed : true}}, function(err, data2){
+                        if(err) throw err;
+                        if(data2.result.n === 1){
+                            db.close();
+                            cbSuccess();
+                        }
+                        else{
+                            db.close();
+                            cbError();
+                        }
+
+                    });
+                }
+                else{
+                    db.close();
+                    cbError();
+                }
+            });
+        });
+    }
+
     static getNumberFriendAsks(cb){
         this.getAllFriendAsks(function(friends){
            cb(friends.length);
