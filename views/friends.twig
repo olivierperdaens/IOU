@@ -23,11 +23,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for friend in connectedUser.friends %}
+                {% for friend in friends %}
                     {% if friend.confirmed %}
                         <tr>
-                            <td>{{ friend.prenom }}</td>
-                            <td>{{ friend.nom }}</td>
+                            <td>{{ friend.otherUser.prenom }} </td>
+                            <td>{{ friend.otherUser.nom }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
@@ -50,13 +50,13 @@
                 {% for friend_info in connectedUser.friends %}
                     {% if friend_info.confirmed == false %}
                         <tr>
-                            <td>{{ friend_info.prenom }}</td>
-                            <td>{{ friend_info.nom }}</td>
+                            <td>{{ friend_info.otherUser.prenom }}</td>
+                            <td>{{ friend_info.otherUser.nom }}</td>
                             <td>{{ friend_info.askDate }}</td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="/friends/accept/{{ friend_info.email }}" class="btn btn-success"><i class="fa fa-check"></i></a>
-                                    <a href="/friends/refuse/{{ friend_info.email }}" class="btn btn-danger"><i class="fa fa-times"></i> </a>
+                                    <a href="/friends/accept/{{ friend_info.otherUser.email }}" class="btn btn-success"><i class="fa fa-check"></i></a>
+                                    <a href="/friends/refuse/{{ friend_info.otherUser.email }}" class="btn btn-danger"><i class="fa fa-times"></i> </a>
                                 </div>
                             </td>
                         </tr>

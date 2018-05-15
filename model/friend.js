@@ -1,4 +1,152 @@
+let conf = require('../congif/config');
+let Mongo = require('mongodb');
+let MongoClient = Mongo.MongoClient;
+let Server = require('mongodb').Server;
+let user = require('../model/user');
+let auth = require('../model/auth');
+let debt = require("../model/debt");
+
+
 class Friend{
+
+    constructor(oid, callback){
+        this._id = oid;
+        this.loadData(callback);
+
+    }
+
+    loadData(callback){
+        let self = this;
+        MongoClient.connect(conf.db.url, (err, db) => {
+            if(err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("friends").findOne({_id:Mongo.ObjectId(this._id)}, (err, data) => {
+                console.log(data);
+               if(err) throw err;
+               if(data != null && data !== undefined){
+                   self._confirmed = data.confirmed;
+                   self._askDate = data.askDate;
+                   self._id_asker = data.id_asker;
+                   self._id_recever = data.id_recever;
+                   callback(self);
+               }
+            });
+        });
+    }
+
+    getAsker(cb){
+        MongoClient.connect(conf.db.url, (err, db) => {
+           if(err) throw err;
+           let dbo = db.db("iou");
+           dbo.collection("users").findOne({_id : Mongo.ObjectId(this._id_asker)}, (err, res)=>{
+              if(err) throw err;
+              cb(res);
+           });
+        });
+       /*
+        new user(this.id_asker, function(user1){
+            cb(user1);
+        });
+        */
+    }
+
+    getRecever(cb){
+        MongoClient.connect(conf.db.url, (err, db) => {
+            if(err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("users").findOne({_id : Mongo.ObjectId(this._id_recever)}, (err, res)=>{
+                if(err) throw err;
+                cb(res);
+            });
+        });
+        /*
+        new user(this.id_recever, function(user2){
+            cb(user2);
+        });
+        */
+    }
+
+    /**
+     * cb renvoie pas une instance du user ! juste les donées
+     * @param cb
+     */
+    getOtherUser(cb){
+        if(conf.connectedUser.id === this._id_asker){
+            this.getRecever(function(user){
+                cb(user);
+            });
+        }
+        else{
+            this.getAsker(function(user){
+               cb(user);
+            });
+        }
+    }
+
+    get confirmed(){
+        return this._confirmed;
+    }
+
+    get askDate(){
+        return this._askDate;
+    }
+
+    static getAllFriendAsks(cb){
+        MongoClient.connect(conf.db.url, (err, db) => {
+            if(err) throw err;
+            let dbo = db.db('iou');
+            dbo.collection("friends").find({id_recever: conf.connectedUser.id.toString(), confirmed: false}).toArray((err, res)=>{
+                if(err) throw err;
+               cb(res);
+            });
+        });
+    }
+
+    static getNumberFriendAsks(cb){
+        this.getAllFriendAsks(function(friends){
+           cb(friends.length);
+        });
+    }
+
+
+    static getAllFriend(userId, cb){
+        MongoClient.connect(conf.db.url, (err, db) => {
+            console.log("getAllFriend");
+            if(err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("friends").find({$or : [{id_asker : userId.toString()}, {id_recever: userId.toString()}]}).toArray((err, data) => {
+               if(err) throw err;
+               let toReturn = [];
+               let i = 0;
+               console.log(data);
+               data.forEach(function(fri){
+                   i++;
+                   new Friend(fri._id, function(friend){
+                      toReturn.push(friend);
+                       if(i===data.length){
+                           cb(toReturn);
+                           db.close();
+                       }
+                   });
+               });
+
+
+            });
+        })
+    }
+
+    static create(cb){
+        MongoClient.connect(conf.db.url, (err, db) => {
+           if(err) throw err;
+           let dbo = db.db('iou');
+           let objectToInsert = {
+               id_asker : Mongo.ObjectId(),
+               id_recever : Mongo.ObjectId(),
+               confirmed : false
+           };
+           dbo.collection('friends').insertOne(objectToInsert);
+        });
+    }
 
 }
 module.exports = Friend;

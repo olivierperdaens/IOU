@@ -1,7 +1,8 @@
 module.exports = function(request, response, next){
     let sess = request.session;
     let auth = require('../model/auth');
-    let user = require("../model/user");
+    let User = require("../model/user");
+    let conf = require("../congif/config");
 
     if(request.url.substring(0,11) !== "/connection") {
         if (sess.email !== undefined && sess.password !== undefined) {
@@ -10,20 +11,28 @@ module.exports = function(request, response, next){
                 sess.password,
                 () => {
                     request.flash("danger", "Vous devez être connecté pour accéder à ce contenu !");
+                    conf.connectedUser = null;
                     response.redirect("/connection/connect");
                 },
                 () => {
                     request.flash("danger", "Vous devez être connecté pour accéder à ce contenu !");
+                    conf.connectedUser = null;
                     response.redirect("/connection/connect");
                 },
                 (userInfo) => {
-                    response.locals.connectedUser = userInfo;
-                    next();
+                    new User(userInfo._id, (usr) => {
+                        console.log(usr);
+                        response.locals.connectedUser = usr;
+                        conf.connectedUser = usr;
+                        next();
+                    });
+
 
                 });
         }
         else{
-            request.flash("danger", "Vous devez être connecté puor accéder à ce contenu !");
+            request.flash("danger", "Vous devez être connecté pour accéder à ce contenu !");
+            conf.connectedUser = null;
             response.redirect("/connection/connect");
         }
     }

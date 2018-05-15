@@ -1,6 +1,8 @@
 let express = require('express');
 let router = express.Router();
 let auth = require("../model/auth");
+let conf = require("../congif/config");
+let user = require("../model/user");
 
 
 /* GET | DISPLAY CONNECT PAGE */
@@ -19,8 +21,8 @@ router.get('/connect', function(req, res) {
 router.post('/connect', function(req, res){
     let email = req.body.email;
     let password = req.body.password;
-
-    auth.isUser(
+    console.log("login auth meth");
+    auth.login(
         email,
         password,
         ()=>{
@@ -38,7 +40,6 @@ router.post('/connect', function(req, res){
             res.redirect("/");
         }
     );
-    //TODO accès aux variable de session trop long !
 });
 
 /* GET | DISPLAY NEW ACCOUNT PAGE */

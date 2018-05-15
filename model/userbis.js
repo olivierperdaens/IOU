@@ -30,7 +30,6 @@ class UserBis{
                         this._nom = data._nom;
                         this._prenom = data._prenom;
                         this._email = data._email;
-                        this._friends = data._friends;
                     }
                     else{
                         throw new Error("User inconnu !");
@@ -67,7 +66,9 @@ class UserBis{
     get knownInDatabase() {
         return this._knownInDatabase;
     }
-
+    get id(){
+        return this._id;
+    }
     set password(value){
         if(!this.knownInDatabase) {
             this._password = bcrypt.hashSync(value, 10);

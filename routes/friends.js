@@ -4,17 +4,18 @@ let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
 let auth = require("../model/auth");
 let friend = require("../model/friend");
-let user = require("../model/user");
+let conf = require("../congif/config");
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    auth.nbrFriendsAsks(req.session.email, req.session.password, function(nbrFriendsAsks){
+    friend.getNumberFriendAsks(function(nbrFriendsAsks){
         let page = {
             title : "IOU",
             id_active: "friends"
         };
-        //TODO gestion de la transmission des infos 'amis'
-        res.render('friends', {page, nbrFriendsAsks});
+        let friends = conf.connectedUser.friends;
+        console.log(friends);
+        res.render('friends', {page, nbrFriendsAsks, friends});
     });
 
 });
@@ -32,7 +33,6 @@ router.get('/accept/:email', function(req, res){
                    friendsTab[i].confirmed = true;
                }
             }
-            //console.log(friendsTab);
             dbo.collection("users").updateOne({email: userInfo.email, password: userInfo.password}, {$set: {friends: friendsTab}}, function (err) {
                 if (err) throw err;
                 db.close();

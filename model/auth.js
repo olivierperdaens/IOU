@@ -1,6 +1,8 @@
 let Mongo = require("mongodb");
 let MongoClient = Mongo.MongoClient;
 let Server = require('mongodb').Server;
+let user = require('../model/user');
+let conf = require('../congif/config');
 
 class Auth{
 
@@ -28,6 +30,21 @@ class Auth{
                 db.close();
             });
         });
+    }
+
+    static login(email, password, cbWrongUser, cbWrongPassword, cbSuccess){
+        console.log("call to isUser");
+        this.isUser(email, password, cbWrongUser, cbWrongPassword, function(result){
+            new user(result._id, (user) => {
+                console.log("user done");
+                conf.connectedUser = user;
+                cbSuccess(result);
+            });
+        });
+    }
+
+    static getConnectedUser(cb){
+        cb(conf.connectedUser);
     }
 
     static userId(email, password, cb){

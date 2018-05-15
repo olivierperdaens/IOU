@@ -25,5 +25,6 @@ module.exports = {
                     db.close();
                 }
             }
-    }
+    },
+    connectedUser : {}
 };

@@ -3,11 +3,12 @@ let router = express.Router();
 let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
 let auth = require("../model/auth");
+let friend = require("../model/friend");
+let conf = require("../congif/config");
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    auth.nbrFriendsAsks(req.session.email, req.session.password, function(nbrFriendsAsks) {
-        let session = req.session;
+    friend.getNumberFriendAsks(function(nbrFriendsAsks){
         let page = {
             title: "IOU",
             id_active: "dettes"
