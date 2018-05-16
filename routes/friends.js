@@ -16,7 +16,6 @@ router.get('/', function(req, res) {
                     title : "IOU",
                     id_active: "friends"
                 };
-
                 res.render('friends', {page, nbrFriendsAsks, friends, asksFriends});
             });
         });
@@ -28,42 +27,29 @@ router.get('/', function(req, res) {
 /* POST ACCEPT FRIEND */
 router.get('/accept/:id', function(req, res){
     let idFriend = req.params.id;
-    MongoClient.connect('mongodb://localhost:27017', (err, db) => {
-        if (err) throw err;
-        let dbo = db.db("iou");
-        dbo.collection("friends").findOne({id_asker : idFriend.toString()}, function(err, data){
-            if(err) throw err;
-            if(data.length !== 0){
-                dbo.collection('friends').updateOne({_id : Mongo.ObjectId(data._id)}, {$set : {confirmed : true}}, function(err, data){
-                    if(err) throw err;
-                    if(data.result.ok == 1){
-                        db.close();
-                        req.flash("success", "Demande acceptée !");
-                        res.redirect("/friends");
-                    }
-                    else{
-                        db.close();
-                        req.flash("warning", "La demande n'a pas été acceptuée suite à un problème technique !");
-                        res.redirect("/friends");
-                    }
-
-                });
-            }
-            else{
-                res.redirect("/friends");
-            }
-        });
+    friend.accept(idFriend, function(){
+        req.flash("success", "Demande acceptée !");
+        res.redirect("/friends");
+    }, function(){
+        req.flash("warning", "La demande n'a pas été acceptuée suite à un problème technique !");
+        res.redirect("/friends");
     });
 });
 
 /* POST REFUSE FRIEND */
-router.get('/refuse/:email', function(req, res){
-    //TODO refuse friend
-    res.send('refuse friend');
+router.get('/refuse/:id', function(req, res){
+    let idFriend = req.params.id;
+    friend.refuse(idFriend, function(){
+        req.flash("success", "Demande refusée !");
+        res.redirect("/friends");
+    }, function(){
+        req.flash("warning", "La demande n'a pas été refusée suite à un problème technique !");
+        res.redirect("/friends");
+    });
 });
 
 /* POST ADD FRIEND */
-router.post('/add', function(req, res){
+router.post('/add/:id', function(req, res){
     //TODO add friend
     res.send('add friend');
 });
