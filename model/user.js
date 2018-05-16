@@ -3,6 +3,7 @@ let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
 let conf = require('../congif/config');
 let friend = require('../model/friend');
+let debt = require ('../model/debt');
 
 class User {
 
@@ -62,6 +63,36 @@ class User {
           cb(res);
       });
   }
+
+
+
+    getDebts(cb){
+        debt.getAllDebts(this._id, function(res){
+            cb(res);
+        });
+    }
+
+    getDebtsList(cb){
+        let list = [];
+        this.getDebts(function(res){
+            let i = 0;
+            if(res.length === 0){
+                cb(list);
+            }
+            else{
+                res.forEach(function(item){
+                    i++;
+                    console.log("getting other party")
+                    item.getOtherDebtUser(function(user){
+                        list.push(user);
+                        if(i===res.length){
+                            cb(list);
+                        }
+                    });
+                });
+            }
+        });
+    }
 
    getFriendslist(cb){
       let list = [];

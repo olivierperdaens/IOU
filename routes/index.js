@@ -4,20 +4,28 @@ let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
 let auth = require("../model/auth");
 let friend = require("../model/friend");
+let debt = require ("../model/debt");
 let conf = require("../congif/config");
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    friend.getNumberFriendAsks(function(nbrFriendsAsks){
-        let page = {
-            title: "IOU",
-            id_active: "Dettes"
-        };
-        res.render('index', {nbrFriendsAsks, page});
+    debt.getNumberDebts(function(nbrDebts){
+        conf.connectedUser.getDebtsList(function(debts){
+
+                let page = {
+                    title : "IOU",
+                    id_active: "dettes"
+                };
+
+                res.render('index', {page, nbrDebts, debts });
+
+        });
+
     });
+
 });
 
-
+/*
 static getDebts(){
     let list = [];
     MongoClient.connect(conf.db.url, (err, db) => {
@@ -43,7 +51,7 @@ static getDebts(){
         });
     });
 }
-
+*/
 
 
 
