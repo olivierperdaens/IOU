@@ -3,6 +3,25 @@
 {% block body %}
     {% include "flash.twig" %}
       <h1>{{page.title}}</h1>
-      <p>Bonjour {{ connectedUser.prenom }} {{ connectedUser.nom }}</p>
+      <p>Bonjour {{ connectedUser.prenom }} {{ connectedUser.nom }} </p>
+    <br>
+    <table class="table table-hover">
+
+
+        {% for friendAsk in asksFriends %}
+        <tr>
+            <td>{{ friendAsk.prenom }} {{ friendAsk.nom }}</td>
+            <td>
+                ammount
+            </td>
+        </tr>
+        {% endfor %}
+
+
+
+        </tr>
+    </table>
+
+
 
 {% endblock %}
