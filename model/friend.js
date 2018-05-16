@@ -2,10 +2,8 @@ let conf = require('../congif/config');
 let Mongo = require('mongodb');
 let MongoClient = Mongo.MongoClient;
 let Server = require('mongodb').Server;
-let user = require('../model/user');
 let auth = require('../model/auth');
 let debt = require("../model/debt");
-
 
 class Friend{
 
@@ -88,6 +86,10 @@ class Friend{
 
     get askDate(){
         return this._askDate;
+    }
+
+    get id(){
+        return this._id;
     }
 
     static getAllFriendAsks(cb){
@@ -178,6 +180,162 @@ class Friend{
         });
     }
 
+    static getAllUsersList(cb){
+        MongoClient.connect(conf.db.url, function(err, db) {
+            let dbo = db.db('iou');
+            dbo.collection('users').find({}).toArray(function (err, allUsers) {
+                if (err) throw err;
+                cb(allUsers);
+            });
+        });
+    }
+
+    static getAllFriendsConfirmedList(cb){
+        let self = this;
+        MongoClient.connect(conf.db.url, function (err, db) {
+           if(err) throw err;
+           let dbo = db.db('iou');
+            dbo.collection('friends').find({$or: [{id_asker: conf.connectedUser.toString(), confirmed: true}, {id_recever: conf.connectedUser.id.toString(), confirmed: true}]}).toArray(function(err, allFriendsConfirmed){
+                if(err) throw err;
+                let listFriendsConfirmed = [];
+                let i = 0;
+                if(allFriendsConfirmed.length === 0){
+                    cb([]);
+                }
+                allFriendsConfirmed.forEach(function (friendsConfirmed) {
+                    i++;
+                    self.getOtherUser(friendsConfirmed._id, function (friendUser){
+                        listFriendsConfirmed.push(friendUser);
+                        if(i === allFriendsConfirmed.length){
+                            cb(listFriendsConfirmed);
+                        }
+                    })
+                });
+            });
+        });
+
+    }
+
+    static getAllWaitingFriendsList(cb){
+        let self = this;
+        MongoClient.connect(conf.db.url, function(err, db){
+            if(err) throw err;
+            let dbo = db.db('iou');
+            dbo.collection('friends').find({$or: [{id_asker: conf.connectedUser.id.toString(), confirmed: false}, {id_recever: conf.connectedUser.id.toString(), confirmed: false}]}).toArray(function(err, allFriendsWaiting){
+                if(err) throw err;
+                let listFriendsWaiting = [];
+                let i = 0;
+                if(allFriendsWaiting.length === 0){
+                    cb([]);
+                }
+                allFriendsWaiting.forEach(function (friendsWaiting) {
+                    i++;
+                    self.getOtherUser(friendsWaiting._id, function (friendUser){
+                        listFriendsWaiting.push(friendUser);
+                        if(i === allFriendsWaiting.length){
+                            cb(listFriendsWaiting);
+                        }
+                    })
+                });
+            });
+        })
+    }
+
+    static getFriendsToAddList2(cb){
+        let list = [];
+        let self = this;
+        self.getAllUsersList(function(allUsersList){
+            self.getAllFriendsConfirmedList(function(allFriendsConfirmedList){
+                self.getAllWaitingFriendsList(function(allFriendsWaitingList){
+                    for(let i=0; i<allUsersList.length; i++){
+
+                        let notKnow = true;
+                        for(let j=0; j<allFriendsConfirmedList.length; j++){
+                            if(allUsersList[i]._id.toString().localeCompare(allFriendsConfirmedList[j]._id.toString()) ===  0){
+                                notKnow = false;
+                            }
+                        }
+
+                        for(let k=0; k<allFriendsWaitingList.length; k++){
+                            if(allUsersList[i]._id.toString().localeCompare(allFriendsWaitingList[k]._id.toString()) === 0){
+                                notKnow = false;
+                            }
+                        }
+
+                        if(allUsersList[i]._id.toString().localeCompare(conf.connectedUser.id.toString()) === 0){
+                            notKnow = false;
+                        }
+
+                        if(notKnow){
+                            list.push(allUsersList[i]);
+                        }
+                    }
+                    cb(list);
+                });
+            });
+        });
+    }
+
+    static addFriend(email, cbSuccess, cbError){
+        let self = this;
+        this.getFriendsToAddList2(function(listFriendsToAdd){
+            let isCorrectToAdd = false;
+
+            if(listFriendsToAdd.length === 0){
+                console.log("lg 0");
+                cbError();
+            }
+
+            for(let i = 0; i<listFriendsToAdd.length; i++){
+                if(listFriendsToAdd[i].email.localeCompare(email) === 0){
+                    isCorrectToAdd = true;
+                }
+            }
+
+            if(isCorrectToAdd){
+                self.create(email,function(){
+                    cbSuccess();
+                }, function(){
+                    cbError();
+                });
+            }
+            else{
+                cbError();
+            }
+        })
+    }
+
+    static getFriendslist(cb){
+        let list = [];
+        this.getAllFriend(conf.connectedUser.id, function(res){
+            let i = 0;
+            if(res.length === 0){
+                cb(list);
+            }
+            else{
+                res.forEach(function(item){
+                    i++;
+                    item.getOtherUser(function(user){
+                        list.push(user);
+                        if(i===res.length){
+                            cb(list);
+                        }
+                    });
+                });
+            }
+        });
+    }
+
+    static findAllUsers(cb){
+        MongoClient.connect('mongodb://localhost:27017', (err, db) => {
+            if (err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection('users').find({}).toArray(function(err, all) {
+                if (err) throw err;
+                cb(all);
+            });
+        });
+    }
 
     static getAllFriend(userId, cb){
         MongoClient.connect(conf.db.url, (err, db) => {
@@ -228,19 +386,53 @@ class Friend{
 
 
             });
-        })
+        });
     }
 
-    static create(cb){
+    static getOtherUser(id_friend, cb){
+        MongoClient.connect(conf.db.url, function(err, db){
+            let dbo = db.db('iou');
+            dbo.collection('friends').findOne({_id: Mongo.ObjectId(id_friend)}, function(err, data){
+                if(err) throw err;
+                if(data.id_asker.toString().localeCompare(conf.connectedUser.id.toString())===0){
+                   dbo.collection('users').findOne({_id: Mongo.ObjectId(data.id_recever)}, function(err, result){
+                       if(err) throw err;
+                       cb(result);
+                   });
+               }
+               else{
+                    dbo.collection('users').findOne({_id: Mongo.ObjectId(data.id_asker)}, function(err, result){
+                        if(err) throw err;
+                        cb(result);
+                    });
+                }
+            });
+        });
+    }
+
+    static create(email_recever, cbSuccess, cbError){
         MongoClient.connect(conf.db.url, (err, db) => {
            if(err) throw err;
            let dbo = db.db('iou');
-           let objectToInsert = {
-               id_asker : Mongo.ObjectId(),
-               id_recever : Mongo.ObjectId(),
-               confirmed : false
-           };
-           dbo.collection('friends').insertOne(objectToInsert);
+           dbo.collection('users').findOne({email: email_recever}, function (err, UserRecever) {
+               if(err) throw err;
+               let objectToInsert = {
+                   id_asker : conf.connectedUser.id.toString(),
+                   id_recever : UserRecever._id.toString(),
+                   confirmed : false
+               };
+               dbo.collection('friends').insertOne(objectToInsert, function(err, res){
+                   if(err) throw err;
+                   if(res.insertedId){
+                       db.close();
+                       cbSuccess();
+                   }
+                   else{
+                       db.close();
+                       cbError();
+                   }
+               });
+           });
         });
     }
 

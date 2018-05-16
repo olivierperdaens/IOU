@@ -6,6 +6,7 @@ let Server = require('mongodb').Server;
 let auth = require("../model/auth");
 let friend = require("../model/friend");
 let conf = require("../congif/config");
+let user = require("../model/user");
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -21,7 +22,22 @@ router.get('/', function(req, res) {
         });
 
     });
+});
 
+router.post('/listToAdd', function(req, res){
+    friend.getFriendsToAddList2(function(data){
+       res.json(data);
+    });
+});
+
+router.post('/addFriend', function(req, res){
+    friend.addFriend(req.body.email_friend, function(){
+        req.flash("success", "Demande d'amitié envoyée !");
+        res.redirect('/friends');
+    }, function(){
+        req.flash("danger", "Erreur lors de l'ajout de l'ami, veuillez réessayer !");
+        res.redirect("/friends");
+    });
 });
 
 /* POST ACCEPT FRIEND */

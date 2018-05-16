@@ -9,12 +9,17 @@
     <div class="row">
 
         <div class="col-sm-10 offset-sm-1">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="input-group-text" id="btnGroupAddon"><i class="fa fa-search"></i></div>
+            <form method="POST" action="/friends/addFriend">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text" id="btnGroupAddon"><i class="fa fa-search"></i></div>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Ajouter un ami ..." id="search_new_friend" name="email_friend">
+                    <div class="input-group-append">
+                        <div class="input-group-text"><button type="submit" id="addFriendButton" style="background-color: transparent; border: none; color:green; cursor: pointer"><i class="fa fa-check"></i></button></div>
+                    </div>
                 </div>
-                <input type="text" class="form-control" placeholder="Ajouter un ami ..." id="search_new_friend">
-            </div>
+            </form>
         </div>
 
         <div class="col-sm-6" style="margin-top: 15px">

@@ -63,7 +63,7 @@ class User {
       });
   }
 
-   getFriendslist(cb){
+  getFriendslist(cb){
       let list = [];
       this.getFriends(function(res){
           let i = 0;
@@ -109,7 +109,7 @@ class User {
       MongoClient.connect('mongodb://localhost:27017', (err, db) => {
           if (err) throw err;
           let dbo = db.db("iou");
-          dbo.collection('users').find({}, function(err, all) {
+          dbo.collection('users').find({}).toArray(function(err, all) {
               if (err) throw err;
               cb(all);
           });
