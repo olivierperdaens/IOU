@@ -74,7 +74,7 @@ class User {
 
     getDebtsList(cb){
         let list = [];
-        this.getDebts(function(res){
+        debt.getAllDebts(function(res){
             let i = 0;
             if(res.length === 0){
                 cb(list);

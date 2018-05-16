@@ -25,34 +25,6 @@ router.get('/', function(req, res) {
 
 });
 
-/*
-static getDebts(){
-    let list = [];
-    MongoClient.connect(conf.db.url, (err, db) => {
-        if(err) throw err;
-        let dbo = db.db('iou');
-        dbo.collection("debts").find({id_receiver: conf.connectedUser.id.toString(), confirmed: false}).toArray((err, res)=>{
-            if(err) throw err;
-            let i=0;
-            res.forEach(function(fri){
-                i++;
-                new Friend(fri._id, function(friend){
-                    list.push(friend);
-                    if(i===res.length){
-                        cb(list);
-                        db.close();
-                    }
-                })
-            });
-            if(res.length ===0){
-                cb(list);
-                db.close();
-            }
-        });
-    });
-}
-*/
-
 
 
 

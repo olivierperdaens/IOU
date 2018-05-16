@@ -33,6 +33,7 @@ class Debt {
                     this._amount = data.amount;
                     this._date_debt = data.date_debt;
                     this._description_debt = data.description_debt;
+                    console.log("Amount : "+this._amount);
                     cb(self);
                     db.close();
                 }
@@ -97,15 +98,14 @@ class Debt {
     }
 
 
-    static getAllDebts(userId, cb){
+    static getAllDebts( cb){
         MongoClient.connect(conf.db.url, (err, db) => {
             if(err) throw err;
             let dbo = db.db("iou");
-            dbo.collection("debts").find({$or : [{id_debt_sender : userId.toString()}, {id_debt_receiver: userId.toString()}]}).toArray((err, data) => {
+            dbo.collection("debts").find({$or : [{id_debt_sender : conf.connectedUser.id.toString()}, {id_debt_receiver: conf.connectedUser.id.toString()}]}).toArray((err, data) => {
                 if(err) throw err;
                 let toReturn = [];
                 let i = 0;
-                console.log(""+i);
                 data.forEach(function(dbt){
                     i++;
                     new Debt(dbt._id, function(debt){
@@ -116,6 +116,7 @@ class Debt {
                         }
                     });
                 });
+
                 if(data.length ===0){
                     cb(toReturn);
                     db.close();
