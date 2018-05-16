@@ -54,6 +54,7 @@ class Debt {
     }
   }
 
+
 }
 
 module.exports = Debt;
