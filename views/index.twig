@@ -19,14 +19,14 @@
                          <p>Bonjour {{ connectedUser.prenom }} {{ connectedUser.nom }} </p>
                      </div>
                      <div class="col-md-7 col-sm-8">
-                         <button class="btn btn-primary" style="margin-bottom: 35px; margin-right: 10px" data-toggle="modal" data-target="#modalNewDette">Ajouter une dette</button> <i class="fa fa-4x fa-balance-scale"></i> <button class="btn btn-primary" style="margin-bottom:35px;margin-left: 10px" data-toggle="modal" data-target="#modalRemboursement">Rembourser une dette</button>
+                         <button class="btn btn-success" style="margin-bottom: 35px; margin-right: 10px" data-toggle="modal" data-target="#modalNewDette">You Owe <b>Me</b></button> <i class="fa fa-4x fa-balance-scale"></i> <button class="btn btn-danger" style="margin-bottom:35px;margin-left: 10px" data-toggle="modal" data-target="#modalRemboursement">I Owe <b>You</b></button>
                      </div>
                  </div>
              </div>
              <div class="col-md-2 col-sm-4">
                  <label for="balanceTotal">Balance générale: </label>
                  <div class="input-group">
-                     <input type="number" id="balanceTotal" class="form-control {{ classAdd }}" style="font-size: 25px;font-weight: bold" value="{{ balanceTotale }}" disabled>
+                     <input type="number" id="balanceTotal" class="form-control {{ classAdd }}" style="font-size: 25px;font-weight: bold" value="{{ balanceTotale | round(2, 'common')}}" disabled>
                      <div class="input-group-append">
                          <span class="input-group-text" id="basic-addon1">€</span>
                      </div>
@@ -43,4 +43,8 @@
 
 
 
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="../javascripts/debts/index.js"></script>
 {% endblock %}

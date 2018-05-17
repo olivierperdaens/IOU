@@ -5,7 +5,7 @@
     </thead>
     <tbody>
     {% for debt in debts %}
-        {% if debt.amount > 0 %}
+        {% if debt.ammount > 0 %}
             {% set style = "table-success" %}
         {% else %}
             {% set style = "table-danger" %}
@@ -13,11 +13,14 @@
         <tr class="{{ style }}">
             <td>{{ debt.user }}</td>
             <td>
-                {% if debt.amount > 0 %}
+                {% if debt.ammount > 0 %}
                 +
                 {% endif %}
-                {{ debt.amount }}
+                {{ debt.ammount | round(2, 'common')}}
                 €
+                <button type="button" class="showHistory" style="background-color: transparent; border: none; float: right; cursor: pointer" id_other_user="{{ debt.id_other_user }}">
+                    <i class="fa fa-list-ul"></i>
+                </button>
             </td>
         </tr>
     {% endfor %}
@@ -27,7 +30,7 @@
             {% if balanceTotale > 0 %}
                 +
             {% endif %}
-            <strong>{{ balanceTotale }}</strong>
+            <strong>{{ balanceTotale | round(2, 'common')}}</strong>
             €
         </td>
     </tr>

@@ -43,6 +43,12 @@ router.post('/listToAdd', function(req, res){
     });
 });
 
+router.get('/listToAdd', function(req, res){
+    friend.getFriendsToAddList2(function(data){
+        res.json(data);
+    });
+});
+
 router.post('/addFriend', function(req, res){
     friend.addFriend(req.body.email_friend, function(){
         req.flash("success", "Demande d'amitié envoyée !");
