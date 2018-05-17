@@ -9,29 +9,25 @@ let conf = require("../congif/config");
 
 /* GET home page. */
 router.get('/', function(req, res) {
-   // debt.getNumberDebts(function(nbrDebts){
-    let dbtList = debt.getDebtsList(conf.connectedUser);
-
-
-
-
-        function(nbrDebts){
-   // debt.getAllDebts(function(debts){
-
-                let page = {
-                    title : "IOU",
-                    id_active: "dettes"
-                };
-            console.log("Debts found in renderer " + nbrDebts.length);
-        res.render('index', {page, debts , nbrDebts});
-
-
-
-       // });
-
-    });
-
-
+    let page = {
+        title : "IOU",
+        id_active: "dettes"
+    };
+    let debts = [
+        {
+            user : "Olivier Perdaens",
+            amount : 150
+        },
+        {
+            user: "Jean Dupont",
+            amount: -100
+        }
+    ];
+    let balanceTotale = 0;
+    for(let i=0; i<debts.length; i++){
+        balanceTotale += debts[i].amount;
+    }
+    res.render('index', {page, debts, balanceTotale});
 });
 
 

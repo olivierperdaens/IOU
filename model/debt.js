@@ -107,16 +107,16 @@ class Debt {
         let toReturn = [];
         console.log("getAllDebts called ");
         MongoClient.connect(conf.db.url, (err, db) => {
-            if(err) throw err;
+            if (err) throw err;
             let dbo = db.db("iou");
-            dbo.collection("debts").find({$or : [{id_debt_sender : conf.connectedUser.id.toString()}, {id_debt_receiver: conf.connectedUser.id.toString()}]}).toArray((err, data) => {
-                if(err) throw err;
-
-
+            dbo.collection("debts").find({$or: [{id_debt_sender: conf.connectedUser.id.toString()}, {id_debt_receiver: conf.connectedUser.id.toString()}]}).toArray((err, data) => {
+                if (err) throw err;
+            });
+        });
     }
 
 
-    static getAllDebts( cb){
+    static getAllDebts(cb){
         let toReturn = [];
         console.log("getAllDebts called ");
         MongoClient.connect(conf.db.url, (err, db) => {

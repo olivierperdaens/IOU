@@ -1,24 +1,44 @@
 {% extends 'layout.twig' %}
 
+{% if balanceTotale > 0 %}
+    {% set classAdd = "is-valid" %}
+{% else %}
+    {% set classAdd = "is-invalid" %}
+{% endif %}
+
+
+
 {% block body %}
     {% include "flash.twig" %}
-      <h1>{{page.title}}</h1>
-      <p>Bonjour {{ connectedUser.prenom }} {{ connectedUser.nom }} </p>
-    <br>
-    <table class="table table-hover">
-        <tr> <td>test </td></tr>
-
-        {% for debt in dbtList %}
-            <tr>
-
-                <td>a </td>
-            </tr>
-        {% endfor %}
-
-
-
-
-    </table>
+         <div class="row">
+             <div class="col-md-10 col-sm-8">
+                 <div class="row">
+                     <div class="col-md-5 col-sm-4">
+                         <h1>{{page.title}}</h1>
+                         <p>Bonjour {{ connectedUser.prenom }} {{ connectedUser.nom }} </p>
+                     </div>
+                     <div class="col-md-7 col-sm-8">
+                         <button class="btn btn-primary" style="margin-bottom: 35px; margin-right: 10px">Ajouter une dette</button> <i class="fa fa-4x fa-balance-scale"></i> <button class="btn btn-primary" style="margin-bottom:35px;margin-left: 10px">Rembourser une dette</button>
+                     </div>
+                 </div>
+             </div>
+             <div class="col-md-2 col-sm-4">
+                 <label for="balanceTotal">Balance générale: </label>
+                 <div class="input-group">
+                     <input type="number" id="balanceTotal" class="form-control {{ classAdd }}" style="font-size: 25px;font-weight: bold" value="{{ balanceTotale }}" disabled>
+                     <div class="input-group-append">
+                         <span class="input-group-text" id="basic-addon1">€</span>
+                     </div>
+                 </div>
+             </div>
+            <div class="col-md-6 col-sm-12">
+                {% include "tableDebt.twig" %}
+            </div>
+             <div class="col-md-6 col-sm-12">
+                 {% include "tableDebtIn.twig" %}
+                 {% include "tableDebtOut.twig" %}
+             </div>
+         </div>
 
 
 

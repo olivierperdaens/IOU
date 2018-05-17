@@ -1,0 +1,35 @@
+<table class="table table-hover">
+    <thead>
+        <th>Ami</th>
+        <th>Balance</th>
+    </thead>
+    <tbody>
+    {% for debt in debts %}
+        {% if debt.amount > 0 %}
+            {% set style = "table-success" %}
+        {% else %}
+            {% set style = "table-danger" %}
+        {% endif %}
+        <tr class="{{ style }}">
+            <td>{{ debt.user }}</td>
+            <td>
+                {% if debt.amount > 0 %}
+                +
+                {% endif %}
+                {{ debt.amount }}
+                €
+            </td>
+        </tr>
+    {% endfor %}
+    <tr class="table-active">
+        <td style="text-align: right">Balance Totale: </td>
+        <td>
+            {% if balanceTotale > 0 %}
+                +
+            {% endif %}
+            <strong>{{ balanceTotale }}</strong>
+            €
+        </td>
+    </tr>
+    </tbody>
+</table>
