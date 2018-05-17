@@ -6,6 +6,7 @@
 
 {% block body %}
     {% include "flash.twig" %}
+    {% include "modalConfirm.twig" %}
     <div class="row">
         <div class="col-sm-10 offset-sm-1">
             <form method="POST" action="/friends/addFriend">
@@ -28,6 +29,7 @@
                     <tr>
                         <th>Prénom</th>
                         <th>Nom</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,6 +37,7 @@
                         <tr>
                             <td>{{ friend.prenom }} </td>
                             <td>{{ friend.nom }}</td>
+                            <td><button class="btn btn-danger deleteUser" id_user="{{ friend._id }}"><i class="fa fa-user-times"></i> </button></td>
                         </tr>
                 {% endfor %}
                 </tbody>

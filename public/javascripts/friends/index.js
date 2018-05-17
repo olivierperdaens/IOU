@@ -1,14 +1,31 @@
-$("#search_new_friend").on("focus", function(){
-
+$.ajax({
+    url :  "/friends/listToAdd",
+    type : "post",
+    dataType : "json",
+    success : function(data){
+        console.log(data);
+        autocomplete(document.getElementById("search_new_friend"), data);
+    }
 });
- $.ajax({
-       url :  "/friends/listToAdd",
-       type : "post",
-       dataType : "json",
-       success : function(data){
-           autocomplete(document.getElementById("search_new_friend"), data);
-       }
-   });
+
+$(".deleteUser").on("click", function(event){
+    let idUser = $(this).attr('id_user');
+    $.ajax({
+        url : "/profile/getInfoUser",
+        type : "post",
+        dataType: "json",
+        data: "id_user=" + idUser,
+        success : function(data){
+            let html = "<i style='color: red' class='fa fa-exclamation-triangle'></i>Voulez-vous vraiment supprimer <b>" + data.prenom + " " + data.nom + "</b> de vos amis ?";
+            $("#modalConfirmTitle").text("Supprimer " + data.prenom + " " + data.nom);
+            $("#modalConfirmBody").html(html);
+            $("#modalConfirm").modal("show");
+            $("#modalConfirmConfirm").on("click", function(){
+                window.location.replace("friends/remove/" + idUser);
+            });
+        }
+    });
+});
 
 
 function autocomplete(inp, arr) {
@@ -29,6 +46,11 @@ function autocomplete(inp, arr) {
         /*append the DIV element as a child of the autocomplete container:*/
         this.parentNode.appendChild(a);
         /*for each item in the array...*/
+        if(arr.length===0){
+            b = document.createElement("DIV");
+            b.innerHTML = "<i class='fa fa-info' style='color:blue;'></i> Aucun utilisateur ne correpond à cette recherche !";
+            a.appendChild(b);
+        }
         for (i = 0; i < arr.length; i++) {
             /*check if the item starts with the same letters as the text field value:*/
             if (arr[i].email.substr(0, val.length).toUpperCase() == val.toUpperCase()) {

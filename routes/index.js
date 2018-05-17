@@ -28,7 +28,7 @@ router.get('/', function(req, res) {
         for(let i=0; i<debts.length; i++){
             balanceTotale += debts[i].amount;
         }
-        res.render('index', {page, debts, balanceTotale});
+        res.render('index', {page, debts, balanceTotale, nbrFriendsAsks});
     });
 });
 

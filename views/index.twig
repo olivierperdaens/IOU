@@ -9,6 +9,7 @@
 
 
 {% block body %}
+    {% include "indexModal.twig" %}
     {% include "flash.twig" %}
          <div class="row">
              <div class="col-md-10 col-sm-8">
@@ -18,7 +19,7 @@
                          <p>Bonjour {{ connectedUser.prenom }} {{ connectedUser.nom }} </p>
                      </div>
                      <div class="col-md-7 col-sm-8">
-                         <button class="btn btn-primary" style="margin-bottom: 35px; margin-right: 10px">Ajouter une dette</button> <i class="fa fa-4x fa-balance-scale"></i> <button class="btn btn-primary" style="margin-bottom:35px;margin-left: 10px">Rembourser une dette</button>
+                         <button class="btn btn-primary" style="margin-bottom: 35px; margin-right: 10px" data-toggle="modal" data-target="#modalNewDette">Ajouter une dette</button> <i class="fa fa-4x fa-balance-scale"></i> <button class="btn btn-primary" style="margin-bottom:35px;margin-left: 10px" data-toggle="modal" data-target="#modalRemboursement">Rembourser une dette</button>
                      </div>
                  </div>
              </div>

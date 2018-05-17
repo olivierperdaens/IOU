@@ -8,15 +8,15 @@ let user = require("../model/User");
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    auth.nbrFriendsAsks(req.session.email, req.session.password, function(nbrFriendsAsks){
-        let page = {
-            title : "IOU",
-            id_active: "friends"
-        };
-        //TODO gestion de la transmission des infos 'amis'
-        res.render('profile', {page, nbrFriendsAsks});
-    });
+    res.send("profilllll");
+});
 
+router.post('/getInfoUser', function(req, res){
+    let id_user = req.body.id_user;
+    console.log(id_user);
+    user.getUserInfo(id_user, function(user){
+        res.json(user);
+    });
 });
 
 /* POST ACCEPT FRIEND */

@@ -117,6 +117,17 @@ class User {
       });
   }
 
+  static getUserInfo(id_user, cb){
+      MongoClient.connect(conf.db.url, function(err, db){
+         if(err) throw err;
+         let dbo = db.db('iou');
+         dbo.collection('users').findOne({_id : Mongo.ObjectId(id_user)}, function(err, res){
+             if(err) throw err;
+             cb(res);
+         })
+      });
+  }
+
 }
 
 module.exports = User;
