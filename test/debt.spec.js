@@ -13,6 +13,7 @@ describe('Debt', () => {
     user1 = new User("jean");
     user2 = new User("marc");
     user1.addFriend(user2);
+    console.log("making new debt");
     debt = new Debt(100);
   });
 

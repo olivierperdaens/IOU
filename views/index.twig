@@ -6,19 +6,18 @@
       <p>Bonjour {{ connectedUser.prenom }} {{ connectedUser.nom }} </p>
     <br>
     <table class="table table-hover">
+        <tr> <td>test </td></tr>
 
-
-        {% for debts in nbrDebts %}
+        {% for debt in dbtList %}
             <tr>
-                <td>test</td>
-                <td>{{ debts.amount }} </td>
-                <td>{{ debts.sender }}</td>
+
+                <td>a </td>
             </tr>
         {% endfor %}
 
 
 
-        </tr>
+
     </table>
 
 

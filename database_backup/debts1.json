@@ -1,0 +1,1 @@
+{"_id":{"$oid":"5afaeb796ebeb22ac870138e"},"id_debt_sender":"5ab3dfc2c41c47348357dfba","id_debt_receiver":"5abe2f9c50239fd8f7b52c88","ammount":2.53,"date":{"$timestamp":{"t":1526394446,"i":1}},"description":"Tu me dois un verre , oubli pas "}

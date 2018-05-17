@@ -68,13 +68,14 @@ class User {
 
     getDebts(cb){
         debt.getAllDebts(this._id, function(res){
+            console.log("Callbeck in getDebts");
             cb(res);
         });
     }
 
     getDebtsList(cb){
         let list = [];
-        debt.getAllDebts(function(res){
+        this.getDebts(function(res){
             let i = 0;
             if(res.length === 0){
                 cb(list);
@@ -82,7 +83,7 @@ class User {
             else{
                 res.forEach(function(item){
                     i++;
-                    console.log("getting other party")
+                    console.log("getting other party");
                     item.getOtherDebtUser(function(user){
                         list.push(user);
                         if(i===res.length){

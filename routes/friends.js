@@ -16,6 +16,7 @@ router.get('/', function(req, res) {
                     title : "IOU",
                     id_active: "friends"
                 };
+                console.log("Getting friends ");
                 res.render('friends', {page, nbrFriendsAsks, friends, asksFriends});
             });
         });

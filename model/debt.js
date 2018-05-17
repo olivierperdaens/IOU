@@ -33,9 +33,9 @@ class Debt {
                     this._amount = data.amount;
                     this._date_debt = data.date_debt;
                     this._description_debt = data.description_debt;
-                    console.log("Amount : "+this._amount);
-                    cb(self);
+                    console.log("Constructor callback for  "+this._description_debt);
                     db.close();
+                    return this;
                 }
             });
         });
@@ -47,6 +47,8 @@ class Debt {
             let dbo = db.db("iou");
             dbo.collection("users").findOne({_id : Mongo.ObjectId(this._id_debt_sender)}, (err, res)=>{
                 if(err) throw err;
+                console.log("Callback on sender ");
+                db.close();
                 cb(res);
             });
         });
@@ -58,6 +60,8 @@ class Debt {
             let dbo = db.db("iou");
             dbo.collection("users").findOne({_id : Mongo.ObjectId(this._id_debt_receiver)}, (err, res)=>{
                 if(err) throw err;
+                console.log("Callback on receiver");
+                db.close();
                 cb(res);
             });
         });
@@ -67,11 +71,13 @@ class Debt {
     async getOtherDebtUser(cb){
         if(conf.connectedUser.id === this._id_debt_receiver){
             this.getDebtReceiver(function(user){
+                console.log("callback on otherbebtuser");
                 cb(user);
             });
         }
         else{
             this.getDebtSender(function(user){
+                console.log("Callback on otherdebtuser2");
                 cb(user);
             });
         }
@@ -97,45 +103,70 @@ class Debt {
       return this._description_debt;
     }
 
-
-    static getAllDebts( cb){
+    static getDebtsList(userid){
+        let toReturn = [];
+        console.log("getAllDebts called ");
         MongoClient.connect(conf.db.url, (err, db) => {
             if(err) throw err;
             let dbo = db.db("iou");
             dbo.collection("debts").find({$or : [{id_debt_sender : conf.connectedUser.id.toString()}, {id_debt_receiver: conf.connectedUser.id.toString()}]}).toArray((err, data) => {
                 if(err) throw err;
-                let toReturn = [];
+
+
+    }
+
+
+    static getAllDebts( cb){
+        let toReturn = [];
+        console.log("getAllDebts called ");
+        MongoClient.connect(conf.db.url, (err, db) => {
+            if(err) throw err;
+            let dbo = db.db("iou");
+            dbo.collection("debts").find({$or : [{id_debt_sender : conf.connectedUser.id.toString()}, {id_debt_receiver: conf.connectedUser.id.toString()}]}).toArray((err, data) => {
+                if(err) throw err;
                 let i = 0;
+
+
+
                 data.forEach(function(dbt){
+                    console.log("found debt item in database" + dbt._id.toString());
                     i++;
                     new Debt(dbt._id, function(debt){
                         toReturn.push(debt);
+                        console.log("Callback in allDebts : "+ debt._description_debt);
                         if(i===data.length){
-                            cb(toReturn);
                             db.close();
+                            console.log("toReturn value " + toReturn.toString());
+                            //console.log("CB value " + cb.toString());
+                            cb(toReturn);
+                           // return ;
                         }
                     });
                 });
 
+
                 if(data.length ===0){
-                    cb(toReturn);
+                    console.log("Callback in allDebts with empty list ");
                     db.close();
+                    cb(toReturn);
                 }
 
 
             });
         })
+
     }
 
 
 
     static getNumberDebts(cb){
         this.getAllDebts(function(debts){
-            cb(debts.length);
+            console.log("Callback on mmber of debts" + debts.length);
+           return cb(debts.length);
         });
     }
 
-
+/*
   addDebiteur(user){
     if(typeof this.crediteur === "undefined" || this.crediteur == null){
       this.debiteur = user
@@ -186,7 +217,7 @@ class Debt {
       this.amount = Math.abs(this.amount -= amount)
     }
   }
-
+*/
 }
 
 module.exports = Debt;
