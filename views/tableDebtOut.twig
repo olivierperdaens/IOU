@@ -6,17 +6,17 @@
     <tbody>
         {% set total = 0 %}
         {% for debt in debts %}
-            {% if debt.amount < 0 %}
-                {% set total = total + debt.amount %}
+            {% if debt.ammount < 0 %}
+                {% set total = total + debt.ammount %}
                 <tr>
                     <td>{{ debt.user }}</td>
-                    <td>{{ debt.amount }}</td>
+                    <td>{{ debt.ammount | round(2, 'common')}}</td>
                 </tr>
             {% endif %}
         {% endfor %}
         <tr class="table-active">
             <td style="text-align: right;">Balance des dettes :</td>
-            <td><strong>{{ total }}</strong> €</td>
+            <td><strong>{{ total | round(2, 'common')}}</strong> €</td>
         </tr>
     </tbody>
 </table>

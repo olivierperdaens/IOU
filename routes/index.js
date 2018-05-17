@@ -10,26 +10,27 @@ let conf = require("../congif/config");
 /* GET home page. */
 router.get('/', function(req, res) {
     friend.getNumberFriendAsks(function(nbrFriendsAsks){
-        let page = {
-            title : "IOU",
-            id_active: "dettes"
-        };
-        let debts = [
-            {
-                user : "Olivier Perdaens",
-                amount : 150
-            },
-            {
-                user: "Jean Dupont",
-                amount: -100
+        debt.getAllDebtAllUsers(function(debts){
+            console.log(debts);
+            let page = {
+                title : "IOU",
+                id_active: "dettes"
+            };
+            let balanceTotale = 0;
+            for(let i=0; i<debts.length; i++){
+                balanceTotale += (debts[i].ammount);
             }
-        ];
-        let balanceTotale = 0;
-        for(let i=0; i<debts.length; i++){
-            balanceTotale += debts[i].amount;
-        }
-        res.render('index', {page, debts, balanceTotale});
+            res.render('index', {page, debts, balanceTotale, nbrFriendsAsks});
+        });
     });
+});
+
+
+router.post('/getDebtHistory', function(req, res){
+    let user_id = req.body.id_user;
+   debt.getAllDebtsOneUserConfirmed(user_id, function(historique){
+       res.json(historique);
+   })
 });
 
 

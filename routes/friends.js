@@ -17,7 +17,6 @@ router.get('/', function(req, res) {
                     title : "IOU",
                     id_active: "friends"
                 };
-                console.log("Getting friends ");
                 res.render('friends', {page, nbrFriendsAsks, friends, asksFriends});
             });
         });
@@ -25,9 +24,28 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get("/remove/:id_user", function(req, res){
+   let id_user = req.params.id_user;
+   user.getUserInfo(id_user, function(userInfo){
+       friend.remove(id_user, function(){
+           req.flash("success", "Votre amitié avec " + userInfo.prenom + " " + userInfo.nom + " a bien été supprimée !");
+           res.redirect("/friends");
+       }, function(){
+            req.flash("danger", "Une erreur est survenue lors de la suppression de votre amitié avec " + userInfo.prenom + " " + userInfo.nom + " !");
+            res.redirect("/friends");
+       })
+   });
+});
+
 router.post('/listToAdd', function(req, res){
     friend.getFriendsToAddList2(function(data){
        res.json(data);
+    });
+});
+
+router.get('/listToAdd', function(req, res){
+    friend.getFriendsToAddList2(function(data){
+        res.json(data);
     });
 });
 

@@ -17,6 +17,7 @@
     "express-flash-messages": "^0.1.1",
     "express-session": "^1.15.6",
     "flash": "^1.1.0",
+    "moment": "^2.22.1",
     "mongodb": "^3.0.4",
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5",
