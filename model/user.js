@@ -3,6 +3,7 @@ let MongoClient = require('mongodb').MongoClient;
 let Server = require('mongodb').Server;
 let conf = require('../congif/config');
 let friend = require('../model/friend');
+let debt = require ('../model/debt');
 
 class User {
 

@@ -1,0 +1,22 @@
+<table class="table table-hover">
+    <thead>
+    <th>Ami</th>
+    <th>Dû total</th>
+    </thead>
+    <tbody>
+    {% set total = 0 %}
+    {% for debt in debts %}
+        {% if debt.amount > 0 %}
+            {% set total = total + debt.amount %}
+            <tr>
+                <td>{{ debt.user }}</td>
+                <td>{{ debt.amount }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+    <tr class="table-active">
+        <td style="text-align: right;">Balance des dûs :</td>
+        <td><strong>{{ total }}</strong> €</td>
+    </tr>
+    </tbody>
+</table>
