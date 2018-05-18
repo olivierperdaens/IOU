@@ -98,7 +98,7 @@ class Debt {
                 let objectReturn = {
                     ammount : total,
                     user : userInfo.prenom + " " + userInfo.nom,
-                    id_other_user : userInfo._id
+                    id_other_user : userInfo._id,
                 };
                 cb(objectReturn);
             });

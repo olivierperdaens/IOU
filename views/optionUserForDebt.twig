@@ -1,0 +1,3 @@
+{% for friend in userFriends %}
+    <option value="{{ friend._id }}">{{ friend.prenom | capitalize }} {{ friend.nom |capitalize }}</option>
+{% endfor %}
