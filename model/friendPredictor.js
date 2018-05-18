@@ -1,19 +1,34 @@
-function  probabilityFinder( friendMatrix  ){
-    var baseArray = friendMatrix[0].slice(); //copy of array instead of reference
-    var baseArrayLink = [];
 
+function getPredicorCount(cb){
+    User.getFriendsListPredictor(currentUserId , function (friendsList){
+        let doubleTab = [];
+        for(let i=0; i<friendsList.length; i++){
+            User.getFriendsListPredictor(userFriend._id, function(friendFriendList){
+                doubleTab[i]=[friendFriendList];
+                if(i===friendFriendList.length-1){
+                    cb(probabilityFinder(doubleTab));
+                }
+            });
+        }
+
+    });
+}
+
+function  probabilityFinder( friendMatrix  ){
+    let baseArray = friendMatrix[0].slice(); //copy of array instead of reference
+    let baseArrayLink = [];
 
     //copies the first array to to base
 
-    for (var i = 1 ; i < friendMatrix[i].length ; i++){
-        for( var j =0 ; j < friendMatrix[i][j].length; j++ ){
-            var inList = 0;
-            for (var k = 0 ; j < baseArray.length || !inList ; k++){
+    for (let i = 1 ; i < friendMatrix[i].length ; i++){
+        for( let j =0 ; j < friendMatrix[i][j].length; j++ ){
+            let inList = 0;
+            for (let k = 0 ; j < baseArray.length || !inList ; k++){
                     //TODO write comparator
                     if(friendMatrix[i][j] === baseArray[k]  ){
                         baseArrayLink[k] = (baseArrayLink[k] || 0) + 1;
 
-                        //either initialises element in position k or incerements it
+                        //either initialises element in position k or increments it
                         inList = 1;
                     }
             }
@@ -32,9 +47,9 @@ function  probabilityFinder( friendMatrix  ){
 }
 
 function unMap( tupleArray ){
-    var finalArray = [];
+    let finalArray = [];
 
-    for (var i = 0 ; i < tupleArray.length ; i++){
+    for (let i = 0 ; i < tupleArray.length ; i++){
         finalArray[i]= tupleArray[i][1];
     }
     return finalArray;
@@ -42,26 +57,24 @@ function unMap( tupleArray ){
 }
 
 function mapTuple (linkArray , userArray ){
-    var tupleArray= [];
-    for (var i = 0 ; i < linkArray.length ; i++){
+    let tupleArray= [];
+    for (let i = 0 ; i < linkArray.length ; i++){
         tupleArray[i] = [linkArray[i],userArray[i]];
-    };
+    }
+
     return tupleArray;
-    //todo maps 2 arrays of the same size to make tuple
 }
 
-
-    //todo merge sort
-
+//merge sorting based on attributed points
  function slicer( tupleArray ){
 
     if(tupleArray.length === 1){
         return tupleArray
     }
 
-    var slice= tupleArray.length/2;
-    var left = tupleArray.slice(0, slice);
-     var right = tupleArray.slice(slice, tupleArray.length);
+    let slice= tupleArray.length/2;
+    let left = tupleArray.slice(0, slice);
+     let right = tupleArray.slice(slice, tupleArray.length);
 
      return merger(slicer(left) , slicer(right));
 
@@ -69,7 +82,7 @@ function mapTuple (linkArray , userArray ){
 
 function merger(tupleArray1,tupleArray2){
 
-    var tupleOut = [];
+    let tupleOut = [];
 
     while(tupleArray1.length > 0 && tupleArray2.length > 0) {
 
@@ -83,7 +96,6 @@ function merger(tupleArray1,tupleArray2){
 
     }
 
-
     //push left over of the list full list
     while (tupleArray1.length > 1){
         tupleOut.push(tupleArray1.shift());
@@ -94,7 +106,5 @@ function merger(tupleArray1,tupleArray2){
     }
 
     return tupleOut;
-
-
 }
 
