@@ -9,6 +9,7 @@ let user, req;
 
 describe("UserBis", function(){
 
+    /*
     describe("New User", function(){
 
         before(function(){
@@ -92,5 +93,5 @@ describe("UserBis", function(){
 
     });
 
-
+*/
 });

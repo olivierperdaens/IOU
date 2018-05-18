@@ -9,6 +9,8 @@ let assert = require('chai').assert;
 
 describe("UserCreation", ()=>{
 
+    /*
+
 let exists = -1;
 
 
@@ -32,6 +34,6 @@ let exists = -1;
 
 });
 
-
+*/
 
 });

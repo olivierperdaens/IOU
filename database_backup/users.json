@@ -1,2 +1,3 @@
-{"_id":{"$oid":"5ab3dfc2c41c47348357dfba"},"email":"olivier.perdaens@hotmail.fr","nom":"Perdaens","prenom":"Olivier","password":"test"}
 {"_id":{"$oid":"5abe2f9c50239fd8f7b52c88"},"email":"jean.dubois@gmail.com","nom":"Dubois","prenom":"Jean","password":"test"}
+{"_id":{"$oid":"5ab3dfc2c41c47348357dfba"},"email":"olivier.perdaens@hotmail.fr","nom":"Perdaens","prenom":"Olivier","password":"test"}
+{"_id":{"$oid":"5afeffaa5e1a0d16fe4a0bd7"},"nom":"oliper","prenom":"oliper","email":"oliper.oliper@hotmail.be","password":"test"}

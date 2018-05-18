@@ -1,1 +1,3 @@
-{"_id":{"$oid":"5af981b183dc1e42907ab26d"},"id_asker":"5abe2f9c50239fd8f7b52c88","id_recever":"5ab3dfc2c41c47348357dfba","confirmed":true,"askDate":"2018-05-14T12:30:00"}
+{"_id":{"$oid":"5afdac74090b59a23135de17"},"id_asker":"5ab3dfc2c41c47348357dfba","id_recever":"5abe2f9c50239fd8f7b52c88","confirmed":true}
+{"_id":{"$oid":"5aff0ebedaf20b22fdc2d8e3"},"id_asker":"5afeffaa5e1a0d16fe4a0bd7","id_recever":"5abe2f9c50239fd8f7b52c88","confirmed":true}
+{"_id":{"$oid":"5aff1056740fcb24969ba897"},"id_asker":"5ab3dfc2c41c47348357dfba","id_recever":"5afeffaa5e1a0d16fe4a0bd7","confirmed":true}

@@ -11,6 +11,7 @@ let assert = require('chai').assert;
 
 describe("friendPredictor", ()=>{
 
+  /*
 
     it('shloud be able to add a friend to an existing user', function(){
 
@@ -24,6 +25,6 @@ describe("friendPredictor", ()=>{
 
 
   });
-
+*/
 
 });
