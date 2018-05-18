@@ -40,17 +40,18 @@ router.get("/remove/:id_user", function(req, res){
 
 router.post('/listToAdd', function(req, res){
 
-
+/*
     predict.getPredictorCount(conf.connectedUser.id.toString(), function(data){
         console.log("starting");
 
         res.json(data);
     });
-    /*
+    */
+
     friend.getFriendsToAddList2(function(data){
        res.json(data);
     });
-*/
+
 });
 
 router.get('/listToAdd', function(req, res){

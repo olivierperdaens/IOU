@@ -14,6 +14,7 @@ static getPredictorCount(currentUserId, cb){
                 console.log("getting friends for " + friendsList[i].nom + "" + i);
                 doubleTab[i]=[friendFriendList];
                 if(i===friendFriendList.length-1){
+                    console.log("here");
                     cb(self.probabilityFinder(doubleTab));
                 }
             });
