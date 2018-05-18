@@ -73,5 +73,6 @@ $(".acceptDebt").on("click", function(){
 });
 
 $(".refuseDebt").on("click", function(){
+    let val = $(this).attr('id_debt');
     window.location.replace('/refuseDebt/'+val);
 });

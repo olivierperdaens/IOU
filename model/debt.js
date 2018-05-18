@@ -300,7 +300,7 @@ class Debt {
         MongoClient.connect(conf.db.url, function(err, db){
             if(err) cbError();
             let dbo = db.db('iou');
-            dbo.collection('debts').deleteOne({_id : MongoClient.ObjectId(id_debt)}, function(err, res){
+            dbo.collection('debts').deleteOne({_id : Mongo.ObjectId(id_debt)}, function(err, res){
                 if(err) cbError();
                 if(res.deletedCount === 1){
                     db.close();
