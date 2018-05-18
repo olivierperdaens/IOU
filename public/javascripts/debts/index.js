@@ -54,3 +54,24 @@ $("#newDebtAntidate").on("change", function(){
        $("#newDebtDate").removeAttr("required");
    }
 });
+
+
+$("#newDebtReverseAntidate").on("change", function(){
+    $("#ReverseifAndtidateTrue").toggle();
+    if($("#ReverseifAndtidateTrue").css("display") !== "none"){
+        $("#newDebtReverseDate").attr("required", "required");
+    }
+    else{
+        console.log("couocu");
+        $("#newDebtReverseDate").removeAttr("required");
+    }
+});
+
+$(".acceptDebt").on("click", function(){
+    let val = $(this).attr('id_debt');
+    window.location.replace('/acceptDebt/'+val);
+});
+
+$(".refuseDebt").on("click", function(){
+    window.location.replace('/refuseDebt/'+val);
+});

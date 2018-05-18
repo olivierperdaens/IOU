@@ -1,0 +1,28 @@
+<table class="table table-hover">
+    Demande de dettes envoyées, en attente !
+    <thead>
+        <th>Ami</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Montant</th>
+    </thead>
+    <tbody>
+    {% for debt in waitingDebtsCreated %}
+            <tr>
+                <td>{{ debt.user }}</td>
+                <td>{{ debt.description }}</td>
+                <td>{{ debt.date }}</td>
+                <td>
+                    <strong>
+                    {% if debt.role == "sender" %}
+                        +
+                    {% else %}
+                        -
+                    {% endif %}
+                    {{ debt.ammount | round(2, 'common')}}€
+                    </strong>
+                </td>
+            </tr>
+    {% endfor %}
+    </tbody>
+</table>

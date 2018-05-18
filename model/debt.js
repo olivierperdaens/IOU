@@ -7,12 +7,18 @@ let moment = require('moment');
 
 class Debt {
 
-    static create(id_recever, description, ammount, cbSuccess, cbError){
+    static create(id_recever, description, ammount, date=null, cbSuccess, cbError){
         MongoClient.connect(conf.db.url, function(err, db){
-            let day = moment().format("YYYY-MM-DDTHH:mm:ss");
-            console.log(day);
+            let day;
+            if(date === null){
+                day = moment().format("YYYY-MM-DDTHH:mm:ss");
+            }
+            else{
+                day = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+            }
             let dbo = db.db('iou');
             let objectToInsert = {
+                id_debt_creator : conf.connectedUser.id.toString(),
                 id_debt_sender : conf.connectedUser.id.toString(),
                 id_debt_receiver : id_recever,
                 ammount : ammount,
@@ -22,7 +28,7 @@ class Debt {
             };
             dbo.collection("debts").insertOne(objectToInsert, function(err, res){
                 if(err) cbError();
-                if(res.insertId){
+                if(res.insertedCount === 1){
                     db.close();
                     cbSuccess();
                 }
@@ -35,13 +41,28 @@ class Debt {
         });
     }
 
-    static delete(id_debt, cbSuccess, cbError){
+    static createReverse(id_sender, description, ammount, date=null, cbSuccess, cbError){
         MongoClient.connect(conf.db.url, function(err, db){
-            if(err) cbError();
+            let day;
+            if(date === null){
+                day = moment().format("YYYY-MM-DDTHH:mm:ss");
+            }
+            else{
+                day = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+            }
             let dbo = db.db('iou');
-            dbo.collection('debts').deleteOne({_id : MongoClient.ObjectId(id_debt)}, function(err, res){
+            let objectToInsert = {
+                id_debt_creator : conf.connectedUser.id.toString(),
+                id_debt_sender : id_sender,
+                id_debt_receiver : conf.connectedUser.id.toString(),
+                ammount : ammount,
+                description : description,
+                date : day,
+                confirmed : false
+            };
+            dbo.collection("debts").insertOne(objectToInsert, function(err, res){
                 if(err) cbError();
-                if(res.deletedCount === 1){
+                if(res.insertedCount === 1){
                     db.close();
                     cbSuccess();
                 }
@@ -50,6 +71,7 @@ class Debt {
                     cbError();
                 }
             });
+
         });
     }
 
@@ -89,10 +111,10 @@ class Debt {
                 let total = 0;
                 for(let i=0; i<listDebtsUser.length; i++){
                     if(listDebtsUser[i].id_debt_sender.toString().localeCompare(id_user.toString())===0){
-                        total -= (listDebtsUser[i].ammount);
+                        total -= parseFloat(listDebtsUser[i].ammount);
                     }
                     else{
-                        total += (listDebtsUser[i].ammount);
+                        total += parseFloat(listDebtsUser[i].ammount);
                     }
                 }
                 let objectReturn = {
@@ -149,6 +171,146 @@ class Debt {
                     }
                 });
             })
+        });
+    }
+
+    static getAllWaitingDebtNotCreated(cb){
+        let self = this;
+        let tab = [];
+        MongoClient.connect(conf.db.url, function(err, db){
+            if(err) throw err;
+            let dbo = db.db('iou');
+            dbo.collection('debts').find({$query : {$and : [{$or : [{id_debt_sender : conf.connectedUser.id.toString(), confirmed : false}, {id_debt_receiver : conf.connectedUser.id.toString(), confirmed : false}]}, {id_debt_creator : {$ne : conf.connectedUser.id.toString()}}]}, $orderby : {date : -1}}).toArray(function(err, res){
+                if(err) throw err;
+                let count = 0;
+                if(res.length === 0){
+                    cb([]);
+                }
+                else{
+                    res.forEach(function(debt){
+                        self.getUserInfo(debt.id_debt_receiver, function(receiverInfo){
+                            self.getUserInfo(debt.id_debt_sender, function(senderInfo){
+                                count++;
+                                if(debt.id_debt_sender.toString().localeCompare(conf.connectedUser.id.toString())===0){
+                                    let objToAdd = {
+                                        id : debt._id,
+                                        ammount : debt.ammount,
+                                        description : debt.description,
+                                        date : moment(debt.date).fromNow(),
+                                        user : receiverInfo.prenom + " " + receiverInfo.nom,
+                                        role : "sender"
+                                    };
+                                    tab.push(objToAdd);
+                                    if(count === res.length){
+                                        cb(tab);
+                                    }
+                                }
+                                else{
+                                    let objToAdd = {
+                                        id : debt._id,
+                                        ammount : debt.ammount,
+                                        description : debt.description,
+                                        date : moment(debt.date).fromNow(),
+                                        user : senderInfo.prenom + " " + senderInfo.nom,
+                                        role : "receiver"
+                                    };
+                                    tab.push(objToAdd);
+                                    if(count === res.length){
+                                        cb(tab);
+                                    }
+                                }
+                            });
+                        });
+                    });
+                }
+           });
+        });
+    }
+
+    static getAllWaitingDebtCreated(cb){
+        let self = this;
+        MongoClient.connect(conf.db.url, function(err, db){
+           if(err) throw err;
+           let tab = [];
+           let dbo = db.db('iou');
+           dbo.collection("debts").find({$query : {id_debt_creator : conf.connectedUser.id.toString(), confirmed: false}, $orderby : {date : -1}}).toArray(function(err, res){
+                if(err) throw err;
+                let count = 0;
+                if(res.length === 0){
+                    cb([]);
+                }
+                else{
+                    res.forEach(function(debt){
+                        self.getUserInfo(debt.id_debt_receiver, function(receiverInfo){
+                            self.getUserInfo(debt.id_debt_sender, function(senderInfo){
+                                count++;
+                                if(debt.id_debt_sender.toString().localeCompare(conf.connectedUser.id.toString())===0){
+                                    let objToAdd = {
+                                        id : debt._id,
+                                        ammount : debt.ammount,
+                                        description : debt.description,
+                                        date : moment(debt.date).fromNow(),
+                                        user : receiverInfo.prenom + " " + receiverInfo.nom,
+                                        role : "sender"
+                                    };
+                                    tab.push(objToAdd);
+                                    if(count === res.length){
+                                        cb(tab);
+                                    }
+                                }
+                                else{
+                                    let objToAdd = {
+                                        id : debt._id,
+                                        ammount : debt.ammount,
+                                        description : debt.description,
+                                        date : moment(debt.date).fromNow(),
+                                        user : senderInfo.prenom + " " + senderInfo.nom,
+                                        role : 'receiver'
+                                    };
+                                    tab.push(objToAdd);
+                                    if(count === res.length){
+                                        cb(tab);
+                                    }
+                                }
+                            });
+                        });
+                    });
+                }
+           })
+        });
+    }
+
+    static acceptDebt(id_debt, cbSuccess, cbError){
+        MongoClient.connect(conf.db.url, function(err, db){
+           if(err) throw err;
+           let dbo = db.db('iou');
+           dbo.collection("debts").updateOne({_id : Mongo.ObjectId(id_debt)}, {$set : {confirmed : true}}, function(err, res){
+              if(err) throw err;
+              if(res.modifiedCount === 1){
+                  cbSuccess();
+              }
+              else{
+                  cbError();
+              }
+           });
+        });
+    }
+
+    static delete(id_debt, cbSuccess, cbError){
+        MongoClient.connect(conf.db.url, function(err, db){
+            if(err) cbError();
+            let dbo = db.db('iou');
+            dbo.collection('debts').deleteOne({_id : MongoClient.ObjectId(id_debt)}, function(err, res){
+                if(err) cbError();
+                if(res.deletedCount === 1){
+                    db.close();
+                    cbSuccess();
+                }
+                else{
+                    db.close();
+                    cbError();
+                }
+            });
         });
     }
 

@@ -272,7 +272,6 @@ class Friend{
             let isCorrectToAdd = false;
 
             if(listFriendsToAdd.length === 0){
-                console.log("lg 0");
                 cbError();
             }
 
