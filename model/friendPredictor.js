@@ -1,12 +1,16 @@
+let User = require('../model/user');
 
-function getPredicorCount(cb){
-    User.getFriendsListPredictor(currentUserId , function (friendsList){
+class friendPredictor{
+
+static getPredictorCount(currentUserId, cb){
+    let self = this;
+    User.getFriendsListPredictor( currentUserId , function (friendsList){
         let doubleTab = [];
         for(let i=0; i<friendsList.length; i++){
-            User.getFriendsListPredictor(userFriend._id, function(friendFriendList){
+            User.getFriendsListPredictor(friendsList[i]._id, function(friendFriendList){
                 doubleTab[i]=[friendFriendList];
                 if(i===friendFriendList.length-1){
-                    cb(probabilityFinder(doubleTab));
+                    cb(self.probabilityFinder(doubleTab));
                 }
             });
         }
@@ -14,20 +18,20 @@ function getPredicorCount(cb){
     });
 }
 
-function  probabilityFinder( friendMatrix  ){
+static  probabilityFinder( friendMatrix  ){
     let baseArray = friendMatrix[0].slice(); //copy of array instead of reference
     let baseArrayLink = [];
-
+    let self = this;
     //copies the first array to to base
 
     for (let i = 1 ; i < friendMatrix[i].length ; i++){
         for( let j =0 ; j < friendMatrix[i][j].length; j++ ){
             let inList = 0;
             for (let k = 0 ; j < baseArray.length || !inList ; k++){
-                    //TODO write comparator
-                    if(friendMatrix[i][j] === baseArray[k]  ){
-                        baseArrayLink[k] = (baseArrayLink[k] || 0) + 1;
 
+                    if(friendMatrix[i][j]._id === baseArray[k]._id   ){
+                        baseArrayLink[k] = (baseArrayLink[k] || 0) + 1;
+                        console.log(baseArray[k]._nom + "found " + baseArrayLink[k]+ "times");
                         //either initialises element in position k or increments it
                         inList = 1;
                     }
@@ -41,22 +45,26 @@ function  probabilityFinder( friendMatrix  ){
         }
     }
 
-    return unMap(slicer(mapTuple( baseArrayLink, baseArray)));
+    return self.unMap(self.slicer(self.mapTuple( baseArrayLink, baseArray)));
     //points first , users objects second
 
 }
 
-function unMap( tupleArray ){
+static unMap( tupleArray ){
     let finalArray = [];
 
     for (let i = 0 ; i < tupleArray.length ; i++){
         finalArray[i]= tupleArray[i][1];
     }
+
+    for(let i = 0 ; i < finalArray.length ; i ++){
+        console.log(finalArray[i].nom);
+    }
     return finalArray;
     //todo returns an array of user objects without point linked to it
 }
 
-function mapTuple (linkArray , userArray ){
+static mapTuple (linkArray , userArray ){
     let tupleArray= [];
     for (let i = 0 ; i < linkArray.length ; i++){
         tupleArray[i] = [linkArray[i],userArray[i]];
@@ -66,8 +74,8 @@ function mapTuple (linkArray , userArray ){
 }
 
 //merge sorting based on attributed points
- function slicer( tupleArray ){
-
+ static slicer( tupleArray ){
+     let self = this;
     if(tupleArray.length === 1){
         return tupleArray
     }
@@ -76,11 +84,11 @@ function mapTuple (linkArray , userArray ){
     let left = tupleArray.slice(0, slice);
      let right = tupleArray.slice(slice, tupleArray.length);
 
-     return merger(slicer(left) , slicer(right));
+     return self.mergeArray(self.slicer(left) , self.slicer(right));
 
 }
 
-function merger(tupleArray1,tupleArray2){
+static mergeArray(tupleArray1,tupleArray2){
 
     let tupleOut = [];
 
@@ -108,3 +116,5 @@ function merger(tupleArray1,tupleArray2){
     return tupleOut;
 }
 
+}
+module.exports = friendPredictor;

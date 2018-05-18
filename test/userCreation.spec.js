@@ -25,8 +25,6 @@ let exists = -1;
                 exists = (data != null && data !== undefined);
                 assert.equal(exists, true);
                 db.close();
-
-
             });
         });
 
