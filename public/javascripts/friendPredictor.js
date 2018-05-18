@@ -1,5 +1,5 @@
 function  probabilityFinder( friendMatrix  ){
-    var baseArray = friendMatrix[0].slice();
+    var baseArray = friendMatrix[0].slice(); //copy of array instead of reference
     var baseArrayLink = [];
 
 
@@ -26,13 +26,19 @@ function  probabilityFinder( friendMatrix  ){
         }
     }
 
-    return slicer(mapTuple(baseArray, baseArrayLink));
-
+    return unMap(slicer(mapTuple( baseArrayLink, baseArray)));
+    //points first , users objects second
 
 }
 
 function unMap( tupleArray ){
-    //todo returns an array of user objects without point linked to it 
+    var finalArray = [];
+
+    for (var i = 0 ; i < tupleArray.length ; i++){
+        finalArray[i]= tupleArray[i][1];
+    }
+    return finalArray;
+    //todo returns an array of user objects without point linked to it
 }
 
 function mapTuple (linkArray , userArray ){
