@@ -38,25 +38,46 @@ class User {
 
   getAsksFriendsList(cb){
       let list = [];
+      let self = this;
         friend.getAllFriendAsks(function(res){
             let i = 0;
             if(res.length===0){
                 cb(list);
             }
             else{
-                res.forEach(function(item){
-                    i++;
-                    item.getOtherUser(function(user){
+                for(let i=0; i<res.length; i++){
+                    self.getOtherUser(res[i]._id, function(user){
                         list.push(user);
-                        if(i===res.length){
+                        if(i===res.length-1){
                             cb(list);
                         }
                     });
-                });
-            }
+                }
 
+            }
         });
   }
+
+  getOtherUser(id_friend, cb){
+        MongoClient.connect(conf.db.url, function(err, db){
+            let dbo = db.db('iou');
+            dbo.collection('friends').findOne({_id: Mongo.ObjectId(id_friend)}, function(err, data){
+                if(err) throw err;
+                if(data.id_asker.toString().localeCompare(conf.connectedUser.id.toString())===0){
+                    dbo.collection('users').findOne({_id: Mongo.ObjectId(data.id_recever)}, function(err, result){
+                        if(err) throw err;
+                        cb(result);
+                    });
+                }
+                else{
+                    dbo.collection('users').findOne({_id: Mongo.ObjectId(data.id_asker)}, function(err, result){
+                        if(err) throw err;
+                        cb(result);
+                    });
+                }
+            });
+        });
+    }
 
   getFriends(cb){
       friend.getAllFriend(this._id, function(res){
@@ -66,20 +87,35 @@ class User {
 
   getFriendslist(cb){
       let list = [];
+      let self = this;
       this.getFriends(function(res){
-          let i = 0;
           if(res.length === 0){
               cb(list);
           }
           else{
-              res.forEach(function(item){
-                  i++;
-                  item.getOtherUser(function(user){
-                      list.push(user);
-                      if(i===res.length){
-                          cb(list);
+              self.findAll(function(allUsers){
+                  for(let i = 0; i<res.length; i++){
+                      if(res[i].id_asker.toString().localeCompare(conf.connectedUser.id.toString()) === 0){
+                          for(let j=0; j<allUsers.length; j++){
+                              if(allUsers[j]._id.toString().localeCompare(res[i].id_recever.toString()) === 0){
+                                  list.push(allUsers[j]);
+                              }
+                          }
+                          if(i === res.length-1){
+                              cb(list);
+                          }
                       }
-                  });
+                      else{
+                          for(let j=0; j<allUsers.length; j++){
+                              if(allUsers[j]._id.toString().localeCompare(res[i].id_asker.toString()) === 0){
+                                  list.push(allUsers[j]);
+                              }
+                          }
+                          if(i === res.length-1){
+                              cb(list);
+                          }
+                      }
+                  }
               });
           }
       });
@@ -117,7 +153,7 @@ class User {
   }
 
 
-  static findAll(cb){
+  findAll(cb){
       MongoClient.connect('mongodb://localhost:27017', (err, db) => {
           if (err) throw err;
           let dbo = db.db("iou");

@@ -1,19 +1,13 @@
+$("#saveNewAccount").on("click", function(event){
+    event.preventDefault();
+   let pass1 = $("#registerPassword").val();
+   let pass2 = $("#registerPassword2").val();
 
-
-function registerCompare () {
-
-    var pass1 = document.getElementById("registerPassword2");
-    var pass2 = document.getElementById("registerPassword2");
-
-
-        if(pass1.value != pass2.value) {
-            alert("Les mots de passe ne sont pas identiques!");
-            console.log("yo");
-            return false;
-        } else {
-            document.getElementById('register_form')[0].submit();
-            alert("submitted");
-            return true;
-        }
-}
+   if(pass1.localeCompare(pass2) === 0){
+       $("#register_form").submit();
+   }
+   else{
+       alert("Les deux mots de passent ne concordent pas !");
+   }
+});
 

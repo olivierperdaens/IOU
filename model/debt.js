@@ -79,7 +79,7 @@ class Debt {
         MongoClient.connect(conf.db.url, function(err, db){
            if(err) throw err;
            let dbo = db.db('iou');
-           dbo.collection('debts').find({$or : [{id_debt_sender: id_user.toString(), id_debt_receiver: conf.connectedUser.id.toString(), confirmed : true}, {id_debt_sender: conf.connectedUser.id.toString(), id_debt_receiver : id_user.toString(), confirmed: true}]}).toArray(function(err, res) {
+           dbo.collection('debts').find({$or : [{id_debt_sender: id_user.toString(), id_debt_receiver: conf.connectedUser.id.toString(), confirmed : true}, {id_debt_sender: conf.connectedUser.id.toString(), id_debt_receiver : id_user.toString(), confirmed: true}]}).sort({date : -1}).toArray(function(err, res) {
                if(err) throw err;
                if(res.length === 0){
                    db.close();

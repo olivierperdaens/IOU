@@ -21,7 +21,6 @@ router.get('/connect', function(req, res) {
 router.post('/connect', function(req, res){
     let email = req.body.email;
     let password = req.body.password;
-    console.log("login auth meth");
     auth.login(
         email,
         password,
@@ -51,6 +50,22 @@ router.get('/new_account', function(req, res) {
 
     res.render("connection/new_account" , {page} );
 
+});
+
+
+router.post("/new_account/send", function(req, res){
+    let email = req.body.email;
+    let prenom = req.body.prenom;
+    let nom = req.body.nom;
+    let mdp = req.body.password1;
+
+    user.create(nom, prenom, email, mdp, function(){
+        req.flash("success", "Votre compte a bien été créé !");
+        res.redirect('/connection/connect')
+    }, function(){
+        req.flash("danger", "Une erreur est survenue lors de la création de votre compte, veuillez réessayer !");
+        res.redirect("/connection/new_account");
+    })
 });
 
 

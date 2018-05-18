@@ -15,6 +15,7 @@ router.get('/', function(req, res) {
             debt.getAllWaitingDebtCreated(function (waitingDebtsCreated){
                 debt.getAllWaitingDebtNotCreated(function(waitingDebtsNotCreated){
                     friend.getFriendslist(function(userFriends){
+                        console.log(userFriends);
                         let page = {
                             title : "IOU",
                             id_active: "dettes"

@@ -89,21 +89,7 @@ class Friend{
             let dbo = db.db('iou');
             dbo.collection("friends").find({id_recever: conf.connectedUser.id.toString(), confirmed: false}).toArray((err, res)=>{
                 if(err) throw err;
-                let i=0;
-                res.forEach(function(fri){
-                   i++;
-                   new Friend(fri._id, function(friend){
-                       list.push(friend);
-                       if(i===res.length){
-                           cb(list);
-                           db.close();
-                       }
-                   })
-                });
-                if(res.length ===0){
-                    cb(list);
-                    db.close();
-                }
+                cb(res);
             });
         });
     }
@@ -112,21 +98,11 @@ class Friend{
         MongoClient.connect('mongodb://localhost:27017', (err, db) => {
             if (err) throw err;
             let dbo = db.db("iou");
-            dbo.collection("friends").findOne({id_asker : idFriend.toString()}, function(err, data){
+            dbo.collection("friends").deleteOne({id_recever : conf.connectedUser.id.toString(), id_asker : idFriend.toString()}, function(err, data2){
                 if(err) throw err;
-                if(data.length !== 0){
-                    dbo.collection("friends").deleteOne({_id : Mongo.ObjectId(data._id)}, function(err, data2){
-                        if(err) throw err;
-                        if(data2.deletedCount === 1){
-                            db.close();
-                            cbSuccess();
-                        }
-                        else{
-                            db.close();
-                            cbError();
-                        }
-
-                    });
+                if(data2.deletedCount === 1){
+                    db.close();
+                    cbSuccess();
                 }
                 else{
                     db.close();
@@ -140,21 +116,11 @@ class Friend{
         MongoClient.connect('mongodb://localhost:27017', (err, db) => {
             if (err) throw err;
             let dbo = db.db("iou");
-            dbo.collection("friends").findOne({id_asker : idFriend.toString()}, function(err, data){
+            dbo.collection('friends').updateOne({id_asker : idFriend.toString(), id_recever : conf.connectedUser.id.toString()}, {$set : {confirmed : true}}, function(err, data){
                 if(err) throw err;
-                if(data.length !== 0){
-                    dbo.collection('friends').updateOne({_id : Mongo.ObjectId(data._id)}, {$set : {confirmed : true}}, function(err, data2){
-                        if(err) throw err;
-                        if(data2.result.n === 1){
-                            db.close();
-                            cbSuccess();
-                        }
-                        else{
-                            db.close();
-                            cbError();
-                        }
-
-                    });
+                if(data.modifiedCount === 1){
+                    db.close();
+                    cbSuccess();
                 }
                 else{
                     db.close();
@@ -188,19 +154,17 @@ class Friend{
             dbo.collection('friends').find({$or: [{id_asker: conf.connectedUser.id.toString(), confirmed: true}, {id_recever: conf.connectedUser.id.toString(), confirmed: true}]}).toArray(function(err, allFriendsConfirmed){
                 if(err) throw err;
                 let listFriendsConfirmed = [];
-                let i = 0;
                 if(allFriendsConfirmed.length === 0){
                     cb([]);
                 }
-                allFriendsConfirmed.forEach(function (friendsConfirmed) {
-                    i++;
-                    self.getOtherUser(friendsConfirmed._id, function (friendUser){
-                        listFriendsConfirmed.push(friendUser);
-                        if(i === allFriendsConfirmed.length){
+                for(let i=0; i<allFriendsConfirmed.length; i++){
+                    self.getOtherUser(allFriendsConfirmed[i]._id, function(friendConfirmed){
+                        listFriendsConfirmed.push(friendConfirmed);
+                        if(i === allFriendsConfirmed.length-1){
                             cb(listFriendsConfirmed);
                         }
                     })
-                });
+                }
             });
         });
 
@@ -214,19 +178,17 @@ class Friend{
             dbo.collection('friends').find({$or: [{id_asker: conf.connectedUser.id.toString(), confirmed: false}, {id_recever: conf.connectedUser.id.toString(), confirmed: false}]}).toArray(function(err, allFriendsWaiting){
                 if(err) throw err;
                 let listFriendsWaiting = [];
-                let i = 0;
                 if(allFriendsWaiting.length === 0){
                     cb([]);
                 }
-                allFriendsWaiting.forEach(function (friendsWaiting) {
-                    i++;
-                    self.getOtherUser(friendsWaiting._id, function (friendUser){
+                for(let i=0; i<allFriendsWaiting.length; i++){
+                    self.getOtherUser(allFriendsWaiting[i]._id, function (friendUser){
                         listFriendsWaiting.push(friendUser);
                         if(i === allFriendsWaiting.length){
                             cb(listFriendsWaiting);
                         }
                     })
-                });
+                }
             });
         })
     }
@@ -296,20 +258,35 @@ class Friend{
 
     static getFriendslist(cb){
         let list = [];
+        let self = this;
         this.getAllFriend(conf.connectedUser.id, function(res){
-            let i = 0;
             if(res.length === 0){
                 cb(list);
             }
             else{
-                res.forEach(function(item){
-                    i++;
-                    item.getOtherUser(function(user){
-                        list.push(user);
-                        if(i===res.length){
-                            cb(list);
+                self.findAllUsers(function(allUsers){
+                    for(let i = 0; i<res.length; i++){
+                        if(res[i].id_asker.toString().localeCompare(conf.connectedUser.id.toString()) === 0){
+                            for(let j=0; j<allUsers.length; j++){
+                                if(allUsers[j]._id.toString().localeCompare(res[i].id_recever.toString()) === 0){
+                                    list.push(allUsers[j]);
+                                }
+                            }
+                            if(i === res.length-1){
+                                cb(list);
+                            }
                         }
-                    });
+                        else{
+                            for(let j=0; j<allUsers.length; j++){
+                                if(allUsers[j]._id.toString().localeCompare(res[i].id_asker.toString()) === 0){
+                                    list.push(allUsers[j]);
+                                }
+                            }
+                            if(i === res.length-1){
+                                cb(list);
+                            }
+                        }
+                    }
                 });
             }
         });
@@ -332,24 +309,7 @@ class Friend{
             let dbo = db.db("iou");
             dbo.collection("friends").find({$or : [{id_asker : userId.toString(), confirmed: true}, {id_recever: userId.toString(), confirmed:true}]}).toArray((err, data) => {
                if(err) throw err;
-               let toReturn = [];
-               let i = 0;
-               data.forEach(function(fri){
-                   i++;
-                   new Friend(fri._id, function(friend){
-                      toReturn.push(friend);
-                       if(i===data.length){
-                           cb(toReturn);
-                           db.close();
-                       }
-                   });
-               });
-               if(data.length ===0){
-                   cb(toReturn);
-                   db.close();
-               }
-
-
+               cb(data);
             });
         })
     }
@@ -405,7 +365,7 @@ class Friend{
         MongoClient.connect(conf.db.url, function (err, db) {
             if(err) throw err;
             let dbo = db.db('iou');
-            dbo.collection("friends").findOne({$or : [{id_recever : id_user.toString(), confirmed: true}, {id_asker : id_user.toString(), confirmed:true}]}, function(err, friend){
+            dbo.collection("friends").findOne({$or : [{id_recever : id_user.toString(), id_asker: conf.connectedUser.id.toString(), confirmed: true}, {id_asker : id_user.toString(), id_recever : conf.connectedUser.id.toString(), confirmed:true}]}, function(err, friend){
                 if(err) cbError();
                 if(friend.length === 0){
                     cbError();

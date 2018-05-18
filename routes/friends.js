@@ -13,6 +13,7 @@ router.get('/', function(req, res) {
     friend.getNumberFriendAsks(function(nbrFriendsAsks){
         conf.connectedUser.getFriendslist(function(friends){
             conf.connectedUser.getAsksFriendsList(function(asksFriends){
+                console.log(asksFriends);
                 let page = {
                     title : "IOU",
                     id_active: "friends"
