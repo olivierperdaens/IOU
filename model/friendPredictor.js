@@ -4,10 +4,14 @@ class friendPredictor{
 
 static getPredictorCount(currentUserId, cb){
     let self = this;
+    console.log("initiating predictor");
     User.getFriendsListPredictor( currentUserId , function (friendsList){
         let doubleTab = [];
-        for(let i=0; i<friendsList.length; i++){
+
+        for(let i=0; i<friendsList.length && doubleTab.length < friendsList.length; i++){
             User.getFriendsListPredictor(friendsList[i]._id, function(friendFriendList){
+
+                console.log("getting friends for " + friendsList[i].nom + "" + i);
                 doubleTab[i]=[friendFriendList];
                 if(i===friendFriendList.length-1){
                     cb(self.probabilityFinder(doubleTab));
@@ -15,10 +19,12 @@ static getPredictorCount(currentUserId, cb){
             });
         }
 
+
     });
 }
 
 static  probabilityFinder( friendMatrix  ){
+
     let baseArray = friendMatrix[0].slice(); //copy of array instead of reference
     let baseArrayLink = [];
     let self = this;
