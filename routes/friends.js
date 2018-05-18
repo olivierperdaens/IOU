@@ -7,6 +7,7 @@ let auth = require("../model/auth");
 let friend = require("../model/friend");
 let conf = require("../congif/config");
 let user = require("../model/user");
+let predict = require("../model/friendPredictor");
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -39,9 +40,19 @@ router.get("/remove/:id_user", function(req, res){
 });
 
 router.post('/listToAdd', function(req, res){
+
+/*
+    predict.getPredictorCount(conf.connectedUser.id.toString(), function(data){
+        console.log("starting");
+
+        res.json(data);
+    });
+    */
+
     friend.getFriendsToAddList2(function(data){
        res.json(data);
     });
+
 });
 
 router.get('/listToAdd', function(req, res){
