@@ -45,7 +45,11 @@ router.post('/connect', function(req, res){
 /* GET | DISPLAY NEW ACCOUNT PAGE */
 router.get('/new_account', function(req, res) {
     //TODO new account page
-    res.send("new_account");
+    let page = {
+        title : "IOU"
+    };
+
+    res.render("connection/new_account" , {page} );
 
 });
 

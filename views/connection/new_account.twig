@@ -1,0 +1,61 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>IOU Connection</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="../stylesheets/connect.css">
+    <link rel="icon" href="../images/iou_favicon.ico">
+</head>
+
+
+<body class="text-center">
+<form id="register_form" method="POST" action="/connection/connect">
+
+    {% include "../flash.twig" %}
+    <div   class="form-signin">
+        <img class="mb-4" src="../images/iou_icon.png" alt="" style="max-height: 250px">
+        <h1 class="h3 mb-3 font-weight-normal">Création de compte</h1>
+
+
+
+        <label for="registerEmail" class="sr-only">Email address</label>
+        <input type="email" id="registerEmail" class="form-control" placeholder="Adresse Email" name="email" required autofocus>
+
+
+
+        <label for="registerName" class="sr-only">Password</label>
+        <input type="text" id="registerName" class="form-control" placeholder="Prénom" name="name" required>
+
+
+
+        <label for="registerFirstName" class="sr-only">Password</label>
+        <input type="text" id="registerFirstName" class="form-control" placeholder="Nom" name="firstName" required>
+
+
+
+        <label for="registerPassword" class="sr-only">Password</label>
+        <input type="password" id="registerPassword" class="form-control" placeholder="Mot de Passe" name="password" required>
+
+        <span   style="position:relative ; top: -15px">
+            <label for="registerPassword2" class="sr-only">Password2</label>
+            <input type="password" id="registerPassword2" class="form-control" placeholder="Re: Mot de Passe" name="password2" required>
+
+            </span>
+
+
+        <a class="btn btn-lg btn-secondary btn-block" onclick="registerCompare()"   href="/connection/new_account">Créer un compte</a>
+        <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+
+    </div>
+</form>
+</body>
+
+
+
+<script src="../javascripts/connection/connection.js" ></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</html>
+
