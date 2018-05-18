@@ -5,24 +5,26 @@
     </thead>
     <tbody>
     {% for debt in debts %}
-        {% if debt.ammount > 0 %}
-            {% set style = "table-success" %}
-        {% else %}
-            {% set style = "table-danger" %}
+        {% if debt.ammount != 0 %}
+            {% if debt.ammount > 0 %}
+                {% set style = "table-success" %}
+            {% else %}
+                {% set style = "table-danger" %}
+            {% endif %}
+            <tr class="{{ style }}">
+                <td>{{ debt.user }}</td>
+                <td>
+                    {% if debt.ammount > 0 %}
+                    +
+                    {% endif %}
+                    {{ debt.ammount | round(2, 'common')}}
+                    €
+                    <button type="button" class="showHistory" style="background-color: transparent; border: none; float: right; cursor: pointer" id_other_user="{{ debt.id_other_user }}" data-toggle="tooltip" data-placement="top" title="Afficher le détail">
+                        <i class="fa fa-list-ul"></i>
+                    </button>
+                </td>
+            </tr>
         {% endif %}
-        <tr class="{{ style }}">
-            <td>{{ debt.user }}</td>
-            <td>
-                {% if debt.ammount > 0 %}
-                +
-                {% endif %}
-                {{ debt.ammount | round(2, 'common')}}
-                €
-                <button type="button" class="showHistory" style="background-color: transparent; border: none; float: right; cursor: pointer" id_other_user="{{ debt.id_other_user }}" data-toggle="tooltip" data-placement="top" title="Afficher le détail">
-                    <i class="fa fa-list-ul"></i>
-                </button>
-            </td>
-        </tr>
     {% endfor %}
     <tr class="table-active">
         <td style="text-align: right">Balance Totale: </td>

@@ -162,15 +162,14 @@ class Debt {
             if(listIdUser.length === 0){
                 cb([]);
             }
-            listIdUser.forEach(function(idUser){
-                i ++;
-                self.getBalanceByUser(idUser, function(obj){
+            for(let i=0; i<listIdUser.length; i++){
+                self.getBalanceByUser(listIdUser[i], function(obj){
                     list.push(obj);
-                    if(i === listIdUser.length){
+                    if(i === listIdUser.length-1){
                         cb(list);
                     }
                 });
-            })
+            }
         });
     }
 
@@ -187,41 +186,40 @@ class Debt {
                     cb([]);
                 }
                 else{
-                    res.forEach(function(debt){
-                        self.getUserInfo(debt.id_debt_receiver, function(receiverInfo){
-                            self.getUserInfo(debt.id_debt_sender, function(senderInfo){
-                                count++;
-                                if(debt.id_debt_sender.toString().localeCompare(conf.connectedUser.id.toString())===0){
+                    for(let i=0; i<res.length; i++){
+                        self.getUserInfo(res[i].id_debt_receiver, function(receiverInfo){
+                            self.getUserInfo(res[i].id_debt_sender, function(senderInfo){
+                                if(res[i].id_debt_sender.toString().localeCompare(conf.connectedUser.id.toString())===0){
                                     let objToAdd = {
-                                        id : debt._id,
-                                        ammount : debt.ammount,
-                                        description : debt.description,
-                                        date : moment(debt.date).fromNow(),
+                                        id : res[i]._id,
+                                        ammount : res[i].ammount,
+                                        description : res[i].description,
+                                        date : moment(res[i].date).fromNow(),
                                         user : receiverInfo.prenom + " " + receiverInfo.nom,
                                         role : "sender"
                                     };
                                     tab.push(objToAdd);
-                                    if(count === res.length){
+                                    if(i === res.length-1){
                                         cb(tab);
                                     }
                                 }
                                 else{
                                     let objToAdd = {
-                                        id : debt._id,
-                                        ammount : debt.ammount,
-                                        description : debt.description,
-                                        date : moment(debt.date).fromNow(),
+                                        id : res[i]._id,
+                                        ammount : res[i].ammount,
+                                        description : res[i].description,
+                                        date : moment(res[i].date).fromNow(),
                                         user : senderInfo.prenom + " " + senderInfo.nom,
                                         role : "receiver"
                                     };
                                     tab.push(objToAdd);
-                                    if(count === res.length){
+                                    if(i === res.length-1){
                                         cb(tab);
                                     }
                                 }
                             });
                         });
-                    });
+                    }
                 }
            });
         });
@@ -240,41 +238,40 @@ class Debt {
                     cb([]);
                 }
                 else{
-                    res.forEach(function(debt){
-                        self.getUserInfo(debt.id_debt_receiver, function(receiverInfo){
-                            self.getUserInfo(debt.id_debt_sender, function(senderInfo){
-                                count++;
-                                if(debt.id_debt_sender.toString().localeCompare(conf.connectedUser.id.toString())===0){
+                    for(let i=0; i<res.length; i++){
+                        self.getUserInfo(res[i].id_debt_receiver, function(receiverInfo){
+                            self.getUserInfo(res[i].id_debt_sender, function(senderInfo){
+                                if(res[i].id_debt_sender.toString().localeCompare(conf.connectedUser.id.toString())===0){
                                     let objToAdd = {
-                                        id : debt._id,
-                                        ammount : debt.ammount,
-                                        description : debt.description,
-                                        date : moment(debt.date).fromNow(),
+                                        id : res[i]._id,
+                                        ammount : res[i].ammount,
+                                        description : res[i].description,
+                                        date : moment(res[i].date).fromNow(),
                                         user : receiverInfo.prenom + " " + receiverInfo.nom,
                                         role : "sender"
                                     };
                                     tab.push(objToAdd);
-                                    if(count === res.length){
+                                    if(i === res.length-1){
                                         cb(tab);
                                     }
                                 }
                                 else{
                                     let objToAdd = {
-                                        id : debt._id,
-                                        ammount : debt.ammount,
-                                        description : debt.description,
-                                        date : moment(debt.date).fromNow(),
+                                        id : res[i]._id,
+                                        ammount : res[i].ammount,
+                                        description : res[i].description,
+                                        date : moment(res[i].date).fromNow(),
                                         user : senderInfo.prenom + " " + senderInfo.nom,
                                         role : 'receiver'
                                     };
                                     tab.push(objToAdd);
-                                    if(count === res.length){
+                                    if(i === res.length-1){
                                         cb(tab);
                                     }
                                 }
                             });
                         });
-                    });
+                    }
                 }
            })
         });
