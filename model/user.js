@@ -85,6 +85,17 @@ class User {
       });
   }
 
+
+    static getFriendsListPredictor(id_user, cb){
+        new User(id_user, function(User){
+            User.getFriendslist(function(data){
+                cb(data);
+            })
+        });
+    }
+
+
+
   get email(){
       return this._email;
   }
