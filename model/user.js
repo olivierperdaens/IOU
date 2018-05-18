@@ -139,6 +139,28 @@ class User {
       });
   }
 
+  static create(nom, prenom, email, password, cbSuccess, cbError){
+      MongoClient.connect(conf.db.url, function(err, db){
+          if(err) throw err;
+          let dbo = db.db("iou");
+          let objToInsert = {
+              nom : nom,
+              prenom : prenom,
+              email : email,
+              password : password
+          };
+          dbo.collection('users').insertOne(objToInsert, function(err, res){
+              if(err) throw err;
+              if(res.insertedCount === 1){
+                  cbSuccess();
+              }
+              else{
+                  cbError();
+              }
+          })
+      })
+  }
+
 }
 
 module.exports = User;

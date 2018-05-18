@@ -41,5 +41,16 @@ $(".showHistory").on("click", function(){
 });
 
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
+$("#newDebtAntidate").on("change", function(){
+   $("#ifAndtidateTrue").toggle();
+   if($("#ifAndtidateTrue").css("display") !== "none"){
+       $("#newDebtDate").attr("required", "required");
+   }
+   else{
+       console.log("couocu");
+       $("#newDebtDate").removeAttr("required");
+   }
 });
