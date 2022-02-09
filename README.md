@@ -23,12 +23,8 @@ Projet Cours LSINF1212 - Application web
 
 
 ### Info login test
-Login 1: "olivier.perdaens@hotmail.fr" \
-Password 1: "test" \
-\
-Login 2: "jean.dubois@gmail.com" \
-Password 2: "test" \
-\
-Login 3: "oliper.oliper@hotmail.be" \
-Password 3: "test"  
+
+Login: "jean.dubois@gmail.com" \
+Password: "test" \
+
 
